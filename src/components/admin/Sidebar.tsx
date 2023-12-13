@@ -37,14 +37,22 @@ const SideBar: React.FC<SideBarProps> = ({ onItemSelect, onSearch }) => {
                 <Tab
                     className="ParentTab"
                     $isSelected={selectedTab === '회원정보'}
-                    onClick={goUser}
+                    onClick={() => {
+                        onItemSelect('회원정보');
+                        setSelectedTab('회원정보');
+                        goUser();
+                    }}
                 >
                     회원정보
                 </Tab>
                 <Tab
                     className="ParentTab"
                     $isSelected={selectedTab === '모집알림'}
-                    onClick={goAlert}
+                    onClick={() => {
+                        onItemSelect('모집알림');
+                        setSelectedTab('모집알림');
+                        goAlert();
+                    }}
                 >
                     모집알림
                 </Tab>
@@ -82,13 +90,7 @@ const SideBar: React.FC<SideBarProps> = ({ onItemSelect, onSearch }) => {
                                 </div>
                                 <Divider />
                                 <div className="boardcontent">
-                                    <SpecialTab
-                                        $isSelected={selectedTab === '멋대중앙'}
-                                        onClick={() => {
-                                            onItemSelect('멋대중앙');
-                                            setSelectedTab('멋대중앙');
-                                        }}
-                                    >
+                                    <SpecialTab $isSelected={false}>
                                         멋대중앙
                                     </SpecialTab>
                                     <Tab
@@ -121,17 +123,20 @@ const SideBar: React.FC<SideBarProps> = ({ onItemSelect, onSearch }) => {
                                 </div>
                                 <Divider />
                                 <div className="boardcontent">
-                                    <SpecialTab
-                                        $isSelected={
-                                            selectedTab === '자유게시판'
-                                        }
-                                        onClick={() => {
-                                            onItemSelect('자유게시판');
-                                            setSelectedTab('자유게시판');
-                                        }}
-                                    >
+                                    <SpecialTab $isSelected={false}>
                                         자유게시판
                                     </SpecialTab>
+                                    <Tab
+                                        $isSelected={
+                                            selectedTab === '정보공유2'
+                                        }
+                                        onClick={() => {
+                                            onItemSelect('정보공유');
+                                            setSelectedTab('정보공유2');
+                                        }}
+                                    >
+                                        정보공유
+                                    </Tab>
                                     <Tab
                                         $isSelected={selectedTab === '팀원모집'}
                                         onClick={() => {
@@ -162,15 +167,7 @@ const SideBar: React.FC<SideBarProps> = ({ onItemSelect, onSearch }) => {
                                 </div>
                                 <Divider />
                                 <div className="boardcontent">
-                                    <SpecialTab
-                                        $isSelected={
-                                            selectedTab === '멋사 오버플로우'
-                                        }
-                                        onClick={() => {
-                                            onItemSelect('멋사 오버플로우');
-                                            setSelectedTab('멋사 오버플로우');
-                                        }}
-                                    >
+                                    <SpecialTab $isSelected={false}>
                                         멋사 오버플로우
                                     </SpecialTab>
                                     <Tab
@@ -224,117 +221,6 @@ const SideBar: React.FC<SideBarProps> = ({ onItemSelect, onSearch }) => {
                     </div>
                 </div>
             </Content>
-            {/* <Divider />
-                <Content>
-                    <SubTitle>자유게시판</SubTitle>
-                    <Tab
-                        $isSelected={selectedTab === '정보공유2'}
-                        onClick={() => {
-                            onItemSelect('정보공유');
-                            setSelectedTab('정보공유2');
-                        }}
-                    >
-                        정보공유
-                    </Tab>
-                    <Tab
-                        $isSelected={selectedTab === '팀원모집'}
-                        onClick={() => {
-                            onItemSelect('팀원모집');
-                            setSelectedTab('팀원모집');
-                        }}
-                    >
-                        팀원모집
-                    </Tab>
-                    <Tab
-                        $isSelected={selectedTab === '플젝모집'}
-                        onClick={() => {
-                            onItemSelect('플젝모집');
-                            setSelectedTab('플젝모집');
-                        }}
-                    >
-                        플젝모집
-                    </Tab>
-                    <Tab
-                        $isSelected={selectedTab === '플젝자랑'}
-                        onClick={() => {
-                            onItemSelect('플젝자랑');
-                            setSelectedTab('플젝자랑');
-                        }}
-                    >
-                        플젝자랑
-                    </Tab>
-                </Content>
-                <Divider />
-                <Content>
-                    <SubTitle>멋사 오버플로우</SubTitle>
-                    <Tab
-                        $isSelected={selectedTab === '프론트'}
-                        onClick={() => {
-                            onItemSelect('프론트');
-                            setSelectedTab('프론트');
-                        }}
-                    >
-                        프론트
-                    </Tab>
-                    <Tab
-                        $isSelected={selectedTab === '백'}
-                        onClick={() => {
-                            onItemSelect('백');
-                            setSelectedTab('백');
-                        }}
-                    >
-                        백
-                    </Tab>
-                    <Tab
-                        $isSelected={selectedTab === '기획'}
-                        onClick={() => {
-                            onItemSelect('기획');
-                            setSelectedTab('기획');
-                        }}
-                    >
-                        기획
-                    </Tab>
-                    <Tab
-                        $isSelected={selectedTab === '디자인'}
-                        onClick={() => {
-                            onItemSelect('디자인');
-                            setSelectedTab('디자인');
-                        }}
-                    >
-                        디자인
-                    </Tab>
-                    <Tab
-                        $isSelected={selectedTab === '기타'}
-                        onClick={() => {
-                            onItemSelect('기타');
-                            setSelectedTab('기타');
-                        }}
-                    >
-                        기타
-                    </Tab>
-                </Content>
-                <TextInput borderColor={inputValue !== '' ? '#FF7710' : '#D1D4D8'}>
-                    <input
-                        style={{ width: '100%', outline: 'none', border: 'none' }}
-                        type="text"
-                        placeholder=" 검색"
-                        value={inputValue}
-                        onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
-                            if (e.key === 'Enter') {
-                                onSearch(inputValue);
-                            }
-                        }}
-                        onChange={e => {
-                            setInputValue(e.target.value);
-                        }}
-                    />
-                    <img
-                        style={{ marginLeft: '8px' }}
-                        src={search}
-                        onClick={() => onSearch(inputValue)}
-                        alt="검색"
-                    />
-                </TextInput> */}
         </Wrapper>
     );
 };
@@ -393,17 +279,10 @@ const Title = styled.div`
     padding-left: 12px;
 `;
 
-const SubTitle = styled.div`
-    font-size: 16px;
-    font-weight: 700;
-    color: var(--Grey-900, #212224);
-    margin: 8px 0;
-`;
-
 const Tab = styled.div<{ $isSelected: boolean }>`
     font-size: 14px;
     font-weight: 500;
-    color: var(--Grey-900, #212224);
+    color: var(--Grey-600, #adb3ba);
     padding: 8px 0;
     cursor: pointer;
 
@@ -430,14 +309,7 @@ const SpecialTab = styled(Tab)<{ $isSelected: boolean }>`
     font-weight: 700;
     color: var(--Grey-900, #212224);
     padding: 8px 0;
-    cursor: pointer;
-
-    ${props =>
-        props.$isSelected &&
-        css`
-            color: var(--Orange-600, #ff7710);
-            font-weight: 700;
-        `}
+    cursor: default;
 `;
 
 const Content = styled.div`
@@ -451,16 +323,4 @@ const Divider = styled.div`
     background-color: var(--Grey-400, #dcdfe3);
     width: 80%;
     margin: 15px;
-`;
-
-const TextInput = styled.div<{ borderColor: string }>`
-    height: 40px;
-    width: 80%;
-    border-radius: 6px;
-    border: 1px solid ${props => props.borderColor};
-    align-items: center;
-    display: inline-flex;
-    justify-content: space-between;
-    margin-top: 16px;
-    padding: 0 8px;
 `;
