@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import SideBar from './Sidebar';
-import Notice from './Notice';
+import Board from './Board';
 
 const Admin: React.FC = () => {
     const [selectedItem, setSelectedItem] = useState<string>('전체 게시글');
@@ -14,7 +14,7 @@ const Admin: React.FC = () => {
                     onItemSelect={setSelectedItem}
                     onSearch={(query: string) => setSearchQuery(query)}
                 />
-                <Notice selectedItem={selectedItem} searchQuery={searchQuery} />
+                <Board selectedItem={selectedItem} searchQuery={searchQuery} />
             </Container>
         </>
     );

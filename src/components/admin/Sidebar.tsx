@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import styled, { css } from 'styled-components';
-import search from '../../img/community/search.svg';
+import search from '../../img/admin/search.svg';
 import { useNavigate } from 'react-router';
 import arrowup from '../../img/admin/Chevron_Up.svg';
 import arrowdown from '../../img/admin/Chevron_Down.svg';
@@ -17,10 +17,10 @@ const SideBar: React.FC<SideBarProps> = ({ onItemSelect, onSearch }) => {
 
     const navigate = useNavigate();
     const goAlert = (): void => {
-        navigate('/admin/recruitalert');
+        navigate('/recruitalert');
     };
     const goUser = (): void => {
-        navigate('/admin');
+        navigate('/');
     };
     const goBoard = (): void => {
         navigate('/adminboard');

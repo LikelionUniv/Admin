@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 
 import EditModal from './EditModal';
 import { UserData, fetchDataFromApi } from './UserData';
+import Pagination from '../../mypage/Pagination';
 import styled from 'styled-components';
 
 export interface TableRow {
@@ -13,46 +14,36 @@ export interface TableRow {
     role: string;
 }
 
+const ITEMS_PER_PAGE = 10;
+
 const UserList: React.FC = () => {
     const [data, setData] = useState<TableRow[]>([]);
-    //const [data, setData] = useState<UserData[]>([]);
     const [isLoading, setIsLoading] = useState(false);
     const [pageNumber, setPageNumber] = useState(1);
     const [hasMore, setHasMore] = useState(true);
     const [editIndex, setEditIndex] = useState<number | null>(null);
-
     const [editModalData, setEditModalData] = useState<Partial<TableRow>>({});
 
     const fetchMoreData = async () => {
         setIsLoading(true);
 
-        /* try {
-            const apiData: UserData[] = await fetchDataFromApi();
-            if (apiData.length > 0) {
-                setData(prevData => [...prevData, ...apiData]);
-                setPageNumber(pageNumber + 1);
-            } else {
-                setHasMore(false);
-            }
-        } catch (error) {
-            console.error('Error fetching data from API:', error);
-        }
+        const startIndex = (pageNumber - 1) * ITEMS_PER_PAGE;
+        const endIndex = startIndex + ITEMS_PER_PAGE;
 
-        setIsLoading(false);
-    }; */
-        // 더미 데이터를 사용
-        const dummyData: TableRow[] = Array.from({ length: 100 }, (_, i) => ({
-            name: `이름${i + 1}`,
-            major: `전공${i + 1}`,
-            semester: i + 1,
-            part: `파트${i + 1}`,
-            email: `email${i + 1}@example.com`,
-            role: `역할${i + 1}`,
-        }));
-
+        const dummyData: TableRow[] = Array.from(
+            { length: ITEMS_PER_PAGE },
+            (_, i) => ({
+                name: `이름${startIndex + i + 1}`,
+                major: `전공${startIndex + i + 1}`,
+                semester: startIndex + i + 1,
+                part: `파트${startIndex + i + 1}`,
+                email: `email${startIndex + i + 1}@example.com`,
+                role: `역할${startIndex + i + 1}`,
+            }),
+        );
         if (pageNumber < 4) {
-            setData(prevData => [...prevData, ...dummyData]);
-            setPageNumber(pageNumber + 1);
+            setData(dummyData); // 페이지당 10개만 보이도록 수정
+            setPageNumber(pageNumber);
         } else {
             setHasMore(false);
         }
@@ -155,6 +146,14 @@ const UserList: React.FC = () => {
 
             {isLoading && <div>로딩 중...</div>}
 
+            <PageWrapper>
+                <Pagination
+                    totalPageNum={Math.ceil(data.length / ITEMS_PER_PAGE)}
+                    pageNum={pageNumber}
+                    setPageNum={setPageNumber}
+                />
+            </PageWrapper>
+
             {editIndex !== null && (
                 <EditModal
                     initialData={editModalData}
@@ -250,4 +249,10 @@ const Divider = styled.div`
     background-color: var(--Grey-900, #212224);
     width: 100%;
     margin-top: 15px;
+`;
+
+const PageWrapper = styled.div`
+    margin: 64px 0 100px 0;
+    align-items: center;
+    display: flex;
 `;

@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import OrderDropDown from '../community/OrderDropDown';
-import WriteIcon from '../../img/community/write.svg';
-import PostList from '../community/PostList';
+import OrderDropDown from './board/OrderDropDown';
+import WriteIcon from '../../img/admin/write.svg';
+import PostList from './board/PostList';
 import { useNavigate } from 'react-router-dom';
-import { PostBoxProp } from '../community/PostBox';
+import { PostBoxProp } from './board/PostBox';
 
 interface NoticeProps {
     selectedItem: string;
