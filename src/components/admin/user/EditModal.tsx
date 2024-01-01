@@ -146,8 +146,8 @@ const BackgroundOverlay = styled.div`
 `;
 
 export const Wrapper = styled.div`
-    width: 25%;
-    height: 90%;
+    width: fit-content;
+    height: fit-content;
     margin: 0 auto;
     margin-top: 32px;
     background-color: white;

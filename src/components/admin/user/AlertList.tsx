@@ -14,7 +14,7 @@ interface UserListProps {
     setSelectedItems: React.Dispatch<React.SetStateAction<TableRow[]>>;
 }
 
-const UserList: React.FC<UserListProps> = ({ setSelectedItems }) => {
+const AlertList: React.FC<UserListProps> = ({ setSelectedItems }) => {
     const [data, setData] = useState<TableRow[]>([]);
     //const [data, setData] = useState<UserData[]>([]);
     const [isLoading, setIsLoading] = useState(false);
@@ -25,21 +25,6 @@ const UserList: React.FC<UserListProps> = ({ setSelectedItems }) => {
     const fetchMoreData = async () => {
         setIsLoading(true);
 
-        /* try {
-            const apiData: UserData[] = await fetchDataFromApi();
-            if (apiData.length > 0) {
-                setData(prevData => [...prevData, ...apiData]);
-                setPageNumber(pageNumber + 1);
-            } else {
-                setHasMore(false);
-            }
-        } catch (error) {
-            console.error('Error fetching data from API:', error);
-        }
-
-        setIsLoading(false);
-    }; */
-        // 더미 데이터를 사용
         const dummyData: TableRow[] = Array.from({ length: 100 }, (_, i) => ({
             isChecked: false,
             number: `010-1234-567${i + 1}`,
@@ -84,7 +69,6 @@ const UserList: React.FC<UserListProps> = ({ setSelectedItems }) => {
     };
 
     const handleSendNotification = () => {
-        // Implement the logic to send notifications here
         const selectedItems = data.filter(item => item.isChecked);
         console.log('Selected Items:', selectedItems);
     };
@@ -139,7 +123,7 @@ const UserList: React.FC<UserListProps> = ({ setSelectedItems }) => {
     );
 };
 
-export default UserList;
+export default AlertList;
 
 const Button = styled.div``;
 

@@ -21,6 +21,7 @@ const router = createBrowserRouter([
                         path: '',
                         element: <User />,
                     },
+
                     {
                         path: 'recruitalert',
                         element: <RecruitAlert />,

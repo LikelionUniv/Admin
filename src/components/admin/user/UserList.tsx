@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 
 import EditModal from './EditModal';
+import EmailModal from './EmailModal';
 import { UserData, fetchDataFromApi } from './UserData';
 import Pagination from '../../mypage/Pagination';
 import styled from 'styled-components';
@@ -23,6 +24,9 @@ const UserList: React.FC = () => {
     const [hasMore, setHasMore] = useState(true);
     const [editIndex, setEditIndex] = useState<number | null>(null);
     const [editModalData, setEditModalData] = useState<Partial<TableRow>>({});
+    const [selectedRows, setSelectedRows] = useState<number[]>([]);
+    const [selectAll, setSelectAll] = useState(false);
+    const [showEmailModal, setShowEmailModal] = useState(false);
 
     const fetchMoreData = async () => {
         setIsLoading(true);
@@ -34,6 +38,7 @@ const UserList: React.FC = () => {
             { length: ITEMS_PER_PAGE },
             (_, i) => ({
                 name: `이름${startIndex + i + 1}`,
+
                 major: `전공${startIndex + i + 1}`,
                 semester: startIndex + i + 1,
                 part: `파트${startIndex + i + 1}`,
@@ -64,7 +69,7 @@ const UserList: React.FC = () => {
     };
 
     const handleDelete = (index: number) => {
-        const shouldDelete = window.confirm('정말로 삭제하시겠습니까?');
+        const shouldDelete = window.confirm('선택한 행을 삭제하시겠습니까?');
 
         if (shouldDelete) {
             const newData = [...data];
@@ -92,6 +97,49 @@ const UserList: React.FC = () => {
         setEditIndex(null);
     };
 
+    const handleCheckboxChange = (index: number) => {
+        const isSelected = selectedRows.includes(index);
+        if (isSelected) {
+            setSelectedRows(selectedRows.filter(i => i !== index));
+        } else {
+            setSelectedRows([...selectedRows, index]);
+        }
+    };
+
+    const handleAllSelectChange = () => {
+        setSelectAll(!selectAll);
+        setSelectedRows(selectAll ? [] : data.map((_, index) => index));
+    };
+
+    const handleDeleteSelected = () => {
+        const shouldDelete = window.confirm('선택한 행을 삭제하시겠습니까?');
+
+        if (shouldDelete) {
+            const newData = data.filter(
+                (_, index) => !selectedRows.includes(index),
+            );
+            setData(newData);
+            setSelectedRows([]);
+        }
+    };
+
+    const handleEmailModalOpen = () => {
+        // Check if there are selected rows before opening the EmailModal
+        if (selectedRows.length > 0) {
+            setShowEmailModal(true);
+        } else {
+            // If no rows are selected, you can show a message or take other actions
+            console.log(
+                'No rows selected. Please select at least one row to send an email.',
+            );
+            // Alternatively, you can show a user-friendly message or perform other actions.
+        }
+    };
+
+    const handleEmailModalClose = () => {
+        setShowEmailModal(false);
+    };
+
     useEffect(() => {
         fetchMoreData();
         const table = document.getElementById('infinite-scroll-table');
@@ -110,7 +158,15 @@ const UserList: React.FC = () => {
         <div id="infinite-scroll-table">
             <Wrapper>
                 <HeadTable>
+                    <Table className="check">
+                        <input
+                            type="checkbox"
+                            checked={selectAll}
+                            onChange={handleAllSelectChange}
+                        />
+                    </Table>
                     <Table className="name">이름</Table>
+
                     <Table className="major">전공</Table>
                     <Table className="generation">기수</Table>
                     <Table className="part">파트</Table>
@@ -121,10 +177,18 @@ const UserList: React.FC = () => {
                 <BodyTable>
                     {data.map((item, index) => (
                         <TableBody key={index}>
+                            <Table className="check">
+                                <input
+                                    type="checkbox"
+                                    checked={selectedRows.includes(index)}
+                                    onChange={() => handleCheckboxChange(index)}
+                                />
+                            </Table>
                             <Table className="name">{item.name}</Table>
+
                             <Table className="major">{item.major}</Table>
                             <Table className="generation">
-                                {item.semester}
+                                {item.semester}기
                             </Table>
                             <Table className="part">{item.part}</Table>
                             <Table className="role">{item.role}</Table>
@@ -146,6 +210,17 @@ const UserList: React.FC = () => {
 
             {isLoading && <div>로딩 중...</div>}
 
+            <SelectedActions>
+                <div>선택한 회원</div>
+                <Button onClick={handleDeleteSelected}>삭제하기</Button>
+                <Button
+                    onClick={handleEmailModalOpen}
+                    disabled={selectedRows.length === 0}
+                >
+                    이메일 보내기
+                </Button>
+            </SelectedActions>
+
             <PageWrapper>
                 <Pagination
                     totalPageNum={Math.ceil(data.length / ITEMS_PER_PAGE)}
@@ -161,6 +236,14 @@ const UserList: React.FC = () => {
                     onCancel={handleModalCancel}
                 />
             )}
+
+            {showEmailModal && (
+                <EmailModal
+                    onCancel={handleEmailModalClose}
+                    selectedRows={selectedRows}
+                    data={data}
+                />
+            )}
         </div>
     );
 };
@@ -174,16 +257,22 @@ const Wrapper = styled.div`
     text-align: left;
     align-items: center;
     justify-content: space-between;
-
     max-height: 1660px;
 
+    .check {
+        width: 33px;
+        height: 24px;
+        accent-color: #ff7710;
+        color: #ffffff;
+    }
+
     .name {
-        width: 83px;
+        width: 93px;
         height: 24px;
     }
 
     .major {
-        width: 166px;
+        width: 156px;
         height: 24px;
     }
 
@@ -249,6 +338,32 @@ const Divider = styled.div`
     background-color: var(--Grey-900, #212224);
     width: 100%;
     margin-top: 15px;
+`;
+
+const SelectedActions = styled.div`
+    display: flex;
+    margin-top: 20px;
+
+    div {
+        font-weight: bold;
+        margin-top: 5px;
+        margin-right: 10px;
+    }
+`;
+
+const Button = styled.button`
+    margin-right: 10px;
+    padding: 8px 16px;
+    background-color: #dcdfe3;
+    color: #ff7710;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
+    border: 1px solid #dcdfe3;
+
+    &:hover {
+        background-color: #d45a07;
+    }
 `;
 
 const PageWrapper = styled.div`

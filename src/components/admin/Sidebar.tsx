@@ -26,6 +26,11 @@ const SideBar: React.FC<SideBarProps> = ({ onItemSelect, onSearch }) => {
         navigate('/adminboard');
     };
 
+    useEffect(() => {
+        onItemSelect('회원정보');
+        setSelectedTab('회원정보');
+    }, [onItemSelect]);
+
     function handleToggleSubList() {
         setShowSubList(prevState => !prevState);
     }
