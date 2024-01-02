@@ -62,7 +62,7 @@ const SideBar: React.FC<SideBarProps> = ({ onItemSelect, onSearch }) => {
                     모집알림
                 </Tab>
 
-                <div className="BoardBox">
+                {/* <div className="BoardBox">
                     <Tab
                         className="ParentBoard"
                         $isSelected={false}
@@ -224,7 +224,7 @@ const SideBar: React.FC<SideBarProps> = ({ onItemSelect, onSearch }) => {
                             </>
                         )}
                     </div>
-                </div>
+                </div> */}
             </Content>
         </Wrapper>
     );

@@ -310,9 +310,9 @@ const BodyTable = styled.div`
         padding: 4px 8px;
         background: #eaecee;
 
+        font-weight: 700;
         color: #212224;
 
-        font-weight: 700;
         border: none;
         cursor: pointer;
 
