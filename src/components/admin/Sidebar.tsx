@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import styled, { css } from 'styled-components';
-import search from '../../img/community/search.svg';
+import search from '../../img/admin/search.svg';
 import { useNavigate } from 'react-router';
 import arrowup from '../../img/admin/Chevron_Up.svg';
 import arrowdown from '../../img/admin/Chevron_Down.svg';
@@ -17,14 +17,19 @@ const SideBar: React.FC<SideBarProps> = ({ onItemSelect, onSearch }) => {
 
     const navigate = useNavigate();
     const goAlert = (): void => {
-        navigate('/admin/recruitalert');
+        navigate('/recruitalert');
     };
     const goUser = (): void => {
-        navigate('/admin');
+        navigate('/');
     };
     const goBoard = (): void => {
         navigate('/adminboard');
     };
+
+    useEffect(() => {
+        onItemSelect('회원정보');
+        setSelectedTab('회원정보');
+    }, [onItemSelect]);
 
     function handleToggleSubList() {
         setShowSubList(prevState => !prevState);
@@ -57,7 +62,7 @@ const SideBar: React.FC<SideBarProps> = ({ onItemSelect, onSearch }) => {
                     모집알림
                 </Tab>
 
-                <div className="BoardBox">
+                {/* <div className="BoardBox">
                     <Tab
                         className="ParentBoard"
                         $isSelected={false}
@@ -219,7 +224,7 @@ const SideBar: React.FC<SideBarProps> = ({ onItemSelect, onSearch }) => {
                             </>
                         )}
                     </div>
-                </div>
+                </div> */}
             </Content>
         </Wrapper>
     );

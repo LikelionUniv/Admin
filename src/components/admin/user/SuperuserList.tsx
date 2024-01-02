@@ -5,9 +5,11 @@ import EmailModal from './EmailModal';
 import { UserData, fetchDataFromApi } from './UserData';
 import Pagination from '../../mypage/Pagination';
 import styled from 'styled-components';
+import search from '../../../img/admin/search.svg';
 
 export interface TableRow {
     name: string;
+    university: string;
     major: string;
     semester: number;
     part: string;
@@ -17,7 +19,7 @@ export interface TableRow {
 
 const ITEMS_PER_PAGE = 10;
 
-const UserList: React.FC = () => {
+const SuperuserList: React.FC = () => {
     const [data, setData] = useState<TableRow[]>([]);
     const [isLoading, setIsLoading] = useState(false);
     const [pageNumber, setPageNumber] = useState(1);
@@ -27,6 +29,8 @@ const UserList: React.FC = () => {
     const [selectedRows, setSelectedRows] = useState<number[]>([]);
     const [selectAll, setSelectAll] = useState(false);
     const [showEmailModal, setShowEmailModal] = useState(false);
+    const [searchInput, setSearchInput] = useState('');
+    const [selectedRole, setSelectedRole] = useState('전체 회원');
 
     const fetchMoreData = async () => {
         setIsLoading(true);
@@ -38,7 +42,7 @@ const UserList: React.FC = () => {
             { length: ITEMS_PER_PAGE },
             (_, i) => ({
                 name: `이름${startIndex + i + 1}`,
-
+                university: `대학${startIndex + i + 1}`,
                 major: `전공${startIndex + i + 1}`,
                 semester: startIndex + i + 1,
                 part: `파트${startIndex + i + 1}`,
@@ -55,6 +59,20 @@ const UserList: React.FC = () => {
 
         setIsLoading(false);
     };
+
+    const onSearch = useCallback(() => {
+        // 검색 로직: 대학명과 역할을 기준으로 검색
+        let filteredData = data.filter(item =>
+            item.university.includes(searchInput),
+        );
+        if (selectedRole !== '전체') {
+            filteredData = filteredData.filter(
+                item => item.role === selectedRole,
+            );
+        }
+        setData(filteredData);
+        setPageNumber(1); // 페이지 번호를 1로 리셋
+    }, [data, searchInput, selectedRole]);
 
     const handleScroll = () => {
         if (!isLoading && hasMore) {
@@ -153,6 +171,41 @@ const UserList: React.FC = () => {
 
     return (
         <div id="infinite-scroll-table">
+            <FlexContainer>
+                <DropDown style={{ width: '120px' }}>
+                    <select
+                        className="DropdownList"
+                        value={selectedRole}
+                        onChange={e => setSelectedRole(e.target.value)}
+                    >
+                        <option value="전체">전체</option>
+                        <option value="대표">대표</option>
+                        <option value="운영진">운영진</option>
+                        <option value="아기사자">아기사자</option>
+                    </select>
+                </DropDown>
+                <TextInput
+                    borderColor={searchInput !== '' ? '#FF7710' : '#D1D4D8'}
+                >
+                    <input
+                        style={{
+                            width: '100%',
+                            outline: 'none',
+                            border: 'none',
+                        }}
+                        type="text"
+                        value={searchInput}
+                        onChange={e => setSearchInput(e.target.value)}
+                        placeholder="대학 이름 검색"
+                    />
+                    <img
+                        style={{ marginLeft: '8px' }}
+                        src={search}
+                        onClick={onSearch}
+                        alt="검색"
+                    />
+                </TextInput>
+            </FlexContainer>
             <Wrapper>
                 <HeadTable>
                     <Table className="check">
@@ -163,7 +216,7 @@ const UserList: React.FC = () => {
                         />
                     </Table>
                     <Table className="name">이름</Table>
-
+                    <Table className="university">대학</Table>
                     <Table className="major">전공</Table>
                     <Table className="generation">기수</Table>
                     <Table className="part">파트</Table>
@@ -182,7 +235,9 @@ const UserList: React.FC = () => {
                                 />
                             </Table>
                             <Table className="name">{item.name}</Table>
-
+                            <Table className="university">
+                                {item.university}
+                            </Table>
                             <Table className="major">{item.major}</Table>
                             <Table className="generation">
                                 {item.semester}기
@@ -246,7 +301,53 @@ const UserList: React.FC = () => {
     );
 };
 
-export default UserList;
+export default SuperuserList;
+
+const FlexContainer = styled.div`
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    margin-top: 10px;
+`;
+
+const DropDown = styled.div`
+    .DropdownName {
+        margin-bottom: 10px;
+        font-weight: 700;
+    }
+
+    .DropdownList {
+        padding-left: 20px;
+        width: auto;
+        height: 40px;
+        border-color: #d1d4d8;
+        border-radius: 6px;
+    }
+`;
+
+const TextInput = styled.div<{ borderColor: string }>`
+    height: 40px;
+    border-radius: 6px;
+    border: 1px solid ${props => props.borderColor};
+    align-items: center;
+    display: inline-flex;
+    //justify-content: space-between;
+    //    margin: 16px 0 10px 0;
+    padding: 0 8px;
+`;
+
+const SearchWrapper = styled.div`
+    display: flex;
+    margin-bottom: 20px;
+    align-items: center;
+
+    input {
+        width: 200px; // 검색창 너비
+        padding: 8px; // 패딩
+        border: 1px solid #dcdfe3; // 테두리
+        border-radius: 6px; // 테두리 둥글기
+    }
+`;
 
 const Wrapper = styled.div`
     max-width: 100%;
@@ -268,7 +369,10 @@ const Wrapper = styled.div`
         width: 93px;
         height: 24px;
     }
-
+    .university {
+        width: 156px;
+        height: 24px;
+    }
     .major {
         width: 156px;
         height: 24px;
@@ -310,9 +414,9 @@ const BodyTable = styled.div`
         padding: 4px 8px;
         background: #eaecee;
 
-        font-weight: 700;
         color: #212224;
 
+        font-weight: 700;
         border: none;
         cursor: pointer;
 
