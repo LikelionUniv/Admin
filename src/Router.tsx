@@ -7,6 +7,7 @@ import AdminPage from './routes/AdminPage';
 import RecruitAlert from './components/admin/RecruitAlert';
 import User from './components/admin/User';
 import Admin from './components/admin/Admin';
+import Superuser from './components/admin/Superuser';
 
 const router = createBrowserRouter([
     {
@@ -21,7 +22,10 @@ const router = createBrowserRouter([
                         path: '',
                         element: <User />,
                     },
-
+                    {
+                        path: 'superuser',
+                        element: <Superuser />,
+                    },
                     {
                         path: 'recruitalert',
                         element: <RecruitAlert />,

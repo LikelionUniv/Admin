@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import cancel from '../../../img/admin/Cancel.svg';
 import { TableRow } from './UserList';
@@ -25,6 +25,7 @@ const EmailModal: React.FC<EmailModalProps> = ({
     const [content, setContent] = useState('');
     const [attachment, setAttachment] = useState<File | null>(null);
     const [selectedFiles, setSelectedFiles] = useState<SelectedFile[]>([]);
+    const [isButtonActive, setIsButtonActive] = useState(false);
 
     // Function to handle sending the email
     const handleSendEmail = () => {
@@ -59,6 +60,10 @@ const EmailModal: React.FC<EmailModalProps> = ({
     const removeFile = (id: number) => {
         setSelectedFiles(prevFiles => prevFiles.filter(file => file.id !== id));
     };
+
+    useEffect(() => {
+        setIsButtonActive(subject.trim() !== '' && content.trim() !== '');
+    }, [subject, content]);
 
     return (
         <>
@@ -123,7 +128,15 @@ const EmailModal: React.FC<EmailModalProps> = ({
                     ))}
                 </Content>
 
-                <Button onClick={handleSendEmail}>보내기</Button>
+                <Button
+                    style={{
+                        backgroundColor: isButtonActive ? '#ff7710' : '#ADB3BA',
+                        cursor: isButtonActive ? 'pointer' : 'default',
+                    }}
+                    onClick={isButtonActive ? handleSendEmail : undefined}
+                >
+                    보내기
+                </Button>
             </Wrapper>
         </>
     );
@@ -162,7 +175,7 @@ export const Wrapper = styled.div`
 
 const Button = styled.div`
     margin: 20px;
-    width: 90%;
+    width: 95%;
     height: 40px;
     padding: 4px 8px;
     display: flex;
@@ -207,7 +220,7 @@ export const Content = styled.div`
     }
 
     .InputBox {
-        width: 95%;
+        width: 100%;
         height: 48px;
         padding-left: 20px;
         border-radius: 6px;
@@ -222,7 +235,7 @@ const Divider = styled.div`
     height: 1px;
     background-color: var(--Grey-900, #dcdfe3);
     width: 100%;
-    margin: 26px 0px 26px 0px;
+    margin: 13px 0px 13px 0px;
 `;
 
 const Input = styled.input`
@@ -230,7 +243,7 @@ const Input = styled.input`
 `;
 
 const Textarea = styled.textarea`
-    width: 95%;
+    width: 0 auto;
     height: 200px;
     padding: 10px;
     border-radius: 6px;
@@ -259,7 +272,7 @@ const FileInputLabel = styled.label`
 `;
 
 const SelectedFileBox = styled.div`
-    width: 95%;
+    width: 100%;
     height: 48px;
     padding: 10px;
     border-radius: 6px;
