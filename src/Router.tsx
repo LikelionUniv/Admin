@@ -5,7 +5,7 @@ import Root from './routes/root';
 import AdminBoardPage from './routes/AdminBoardPage';
 import AdminPage from './routes/AdminPage';
 import RecruitAlert from './components/admin/RecruitAlert';
-import User from './components/admin/User';
+import { User } from './components/admin/User';
 import Admin from './components/admin/Admin';
 import Superuser from './components/admin/Superuser';
 
