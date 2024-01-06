@@ -28,7 +28,8 @@ const AlertList: React.FC<UserListProps> = ({ setSelectedItems }) => {
         const dummyData: TableRow[] = Array.from({ length: 100 }, (_, i) => ({
             isChecked: false,
             number: `010-1234-567${i + 1}`,
-            email: `email${i + 1}@example.com`,
+            email: `email${i + 1}@naver.com`,
+            // email: `doris5093@naver.com`,
             date: `YYYY.MM.DD`,
         }));
 
