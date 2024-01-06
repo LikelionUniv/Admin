@@ -1,6 +1,7 @@
 import React, { useContext, useState } from 'react';
 import styled from 'styled-components';
 import UserList, { TableRow } from './user/AlertList';
+import axios from 'axios';
 
 const contentSubtitles: Record<string, string> = {
     회원정보: '멋대 중앙의 공지사항을 확인할 수 있을지도?.',
@@ -21,10 +22,26 @@ const contentSubtitles: Record<string, string> = {
 const RecruitAlert = () => {
     const [selectedItems, setSelectedItems] = useState<TableRow[]>([]);
 
-    const handleSendNotification = () => {
-        // 알림을 보내는 로직 추가
-        console.log('선택된 아이템:', selectedItems);
-        // selectedItems에 있는 이메일 주소로 알림을 보내는 로직을 추가 예정
+    const handleSendNotification = async () => {
+        // 선택된 아이템들의 이메일 주소를 추출
+        const emailAddresses = selectedItems.map(item => item.email);
+
+        try {
+            // POST 요청 보내기
+            const response = await axios.post(
+                'https://stag.likelionuniv.com/api/admin/v1/alarm/recruit',
+                {
+                    receivers: emailAddresses,
+                    subject: 'string',
+                    contentsType: 'string',
+                    contents: 'string',
+                },
+            );
+
+            console.log('성공:', response.data);
+        } catch (error) {
+            console.error('오류:', error);
+        }
     };
 
     return (

@@ -4,37 +4,39 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
 interface User {
-  id: number;
-  name: string;
-  email: string;
+    id: number;
+    name: string;
+    email: string;
 }
 
 const UserList = () => {
-  const [users, setUsers] = useState<User[]>([]);
+    const [users, setUsers] = useState<User[]>([]);
 
-  useEffect(() => {
-    const fetchUsers = async () => {
-      try {
-        const response = await axios.get<User[]>('/api/v1/univAdmin/users');
-        setUsers(response.data);
-      } catch (error) {
-        console.error('Error:', error);
-      }
-    };
+    useEffect(() => {
+        const fetchUsers = async () => {
+            try {
+                const response = await axios.get<User[]>(
+                    '/api/v1/univAdmin/users',
+                );
+                setUsers(response.data);
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        };
 
-    fetchUsers();
-  }, []);
+        fetchUsers();
+    }, []);
 
-  return (
-    <div>
-      {users.map((user) => (
-        <div key={user.id}>
-          <h2>{user.name}</h2>
-          <p>{user.email}</p>
+    return (
+        <div>
+            {users.map(user => (
+                <div key={user.id}>
+                    <h2>{user.name}</h2>
+                    <p>{user.email}</p>
+                </div>
+            ))}
         </div>
-      ))}
-    </div>
-  );
+    );
 };
 
 const User: React.FC = () => {
