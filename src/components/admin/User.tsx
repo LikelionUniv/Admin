@@ -1,40 +1,34 @@
-import React, { useEffect, useState } from 'react';
+import React, { Suspense } from 'react';
 import styled from 'styled-components';
-import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import useServerSidePagination from '../../query/get/useServerSidePagination';
+import SuperuserList from './user/SuperuserList';
 
-interface User {
+export interface IUser {
     id: number;
     name: string;
     email: string;
+    major: string;
+    part: string;
+    ordinal: number;
+    role: string;
 }
 
 const UserList = () => {
-    const [users, setUsers] = useState<User[]>([]);
-
-    useEffect(() => {
-        const fetchUsers = async () => {
-            try {
-                const response = await axios.get<User[]>(
-                    '/api/v1/univAdmin/users',
-                );
-                setUsers(response.data);
-            } catch (error) {
-                console.error('Error:', error);
-            }
-        };
-
-        fetchUsers();
-    }, []);
+    const {curPageItem, renderPaginationBtn} = useServerSidePagination<IUser>({
+        uri: '/api/admin/v1/univAdmin/users',
+        size: 2,
+    });        
 
     return (
         <div>
-            {users.map(user => (
+            {curPageItem.map(user => (
                 <div key={user.id}>
                     <h2>{user.name}</h2>
                     <p>{user.email}</p>
                 </div>
             ))}
+            {renderPaginationBtn()}
         </div>
     );
 };
@@ -48,10 +42,13 @@ const User: React.FC = () => {
                 <Title>회원정보</Title>
                 <UniversityName>홍익대학교</UniversityName>
             </div>
+            
+            <Suspense fallback={<div>loading...</div>}>
+                <div style={{ display: 'flex' }}>
+                    <SuperuserList />
+                </div>
+            </Suspense>
 
-            <div style={{ display: 'flex' }}>
-                <UserList />
-            </div>
         </Wrapper>
     );
 };

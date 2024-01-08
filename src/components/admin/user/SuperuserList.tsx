@@ -1,119 +1,125 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState } from 'react';
 
 import EditModal from './EditModal';
 import EmailModal from './EmailModal';
-import { UserData, fetchDataFromApi } from './UserData';
 import Pagination from '../../mypage/Pagination';
 import styled from 'styled-components';
 import search from '../../../img/admin/search.svg';
+import useServerSidePagination from '../../../query/get/useServerSidePagination';
+import { IUser } from '../User';
 
 export interface TableRow {
     name: string;
-    university: string;
     major: string;
-    semester: number;
+    ordinal: number;
     part: string;
-    email: string;
     role: string;
+    email: string;
+    university: string;
 }
 
 const ITEMS_PER_PAGE = 10;
 
 const SuperuserList: React.FC = () => {
-    const [data, setData] = useState<TableRow[]>([]);
-    const [isLoading, setIsLoading] = useState(false);
-    const [pageNumber, setPageNumber] = useState(1);
-    const [hasMore, setHasMore] = useState(true);
-    const [editIndex, setEditIndex] = useState<number | null>(null);
-    const [editModalData, setEditModalData] = useState<Partial<TableRow>>({});
+    // const [data, setData] = useState<TableRow[]>([]);
+    // const [isLoading, setIsLoading] = useState(false);
+    // const [pageNumber, setPageNumber] = useState(1);
+    // const [hasMore, setHasMore] = useState(true);
+    // const [editIndex, setEditIndex] = useState<number | null>(null);
+    // const [editModalData, setEditModalData] = useState<Partial<TableRow>>({});
     const [selectedRows, setSelectedRows] = useState<number[]>([]);
     const [selectAll, setSelectAll] = useState(false);
     const [showEmailModal, setShowEmailModal] = useState(false);
     const [searchInput, setSearchInput] = useState('');
     const [selectedRole, setSelectedRole] = useState('전체 회원');
 
-    const fetchMoreData = async () => {
-        setIsLoading(true);
+    const {curPageItem: data, renderPaginationBtn} = useServerSidePagination<IUser>({
+        uri: '/api/admin/v1/univAdmin/users',
+        size: 2,
+    }); 
 
-        const startIndex = (pageNumber - 1) * ITEMS_PER_PAGE;
-        const endIndex = startIndex + ITEMS_PER_PAGE;
+    // const fetchMoreData = async () => {
+    //     setIsLoading(true);
 
-        const dummyData: TableRow[] = Array.from(
-            { length: ITEMS_PER_PAGE },
-            (_, i) => ({
-                name: `이름${startIndex + i + 1}`,
-                university: `대학${startIndex + i + 1}`,
-                major: `전공${startIndex + i + 1}`,
-                semester: startIndex + i + 1,
-                part: `파트${startIndex + i + 1}`,
-                email: `email${startIndex + i + 1}@example.com`,
-                role: `역할${startIndex + i + 1}`,
-            }),
-        );
-        if (pageNumber < 4) {
-            setData(dummyData); // 페이지당 10개만 보이도록 수정
-            setPageNumber(pageNumber);
-        } else {
-            setHasMore(false);
-        }
+    //     const startIndex = (pageNumber - 1) * ITEMS_PER_PAGE;
+    //     const endIndex = startIndex + ITEMS_PER_PAGE;
 
-        setIsLoading(false);
-    };
+    //     const dummyData: TableRow[] = Array.from(
+    //         { length: ITEMS_PER_PAGE },
+    //         (_, i) => ({
+    //             name: `이름${startIndex + i + 1}`,
+    //             university: `대학${startIndex + i + 1}`,
+    //             major: `전공${startIndex + i + 1}`,
+    //             semester: startIndex + i + 1,
+    //             part: `파트${startIndex + i + 1}`,
+    //             email: `email${startIndex + i + 1}@example.com`,
+    //             role: `역할${startIndex + i + 1}`,
+    //         }),
+    //     );
+    //     if (pageNumber < 4) {
+    //         setData(dummyData); // 페이지당 10개만 보이도록 수정
+    //         setPageNumber(pageNumber);
+    //     } else {
+    //         setHasMore(false);
+    //     }
 
-    const onSearch = useCallback(() => {
-        // 검색 로직: 대학명과 역할을 기준으로 검색
-        let filteredData = data.filter(item =>
-            item.university.includes(searchInput),
-        );
-        if (selectedRole !== '전체') {
-            filteredData = filteredData.filter(
-                item => item.role === selectedRole,
-            );
-        }
-        setData(filteredData);
-        setPageNumber(1); // 페이지 번호를 1로 리셋
-    }, [data, searchInput, selectedRole]);
+    //     setIsLoading(false);
+    // };
 
-    const handleScroll = () => {
-        if (!isLoading && hasMore) {
-            const table = document.getElementById('infinite-scroll-table');
-            if (
-                table &&
-                table.scrollTop + table.clientHeight >= table.scrollHeight - 100
-            ) {
-                fetchMoreData();
-            }
-        }
-    };
+    // const onSearch = useCallback(() => {
+    //     // 검색 로직: 대학명과 역할을 기준으로 검색
+    //     let filteredData = data.filter(item =>
+    //         item.university.includes(searchInput),
+    //     );
+    //     if (selectedRole !== '전체') {
+    //         filteredData = filteredData.filter(
+    //             item => item.role === selectedRole,
+    //         );
+    //     }
+    //     setData(filteredData);
+    //     setPageNumber(1); // 페이지 번호를 1로 리셋
+    // }, [data, searchInput, selectedRole]);
 
-    const handleDelete = (index: number) => {
-        const shouldDelete = window.confirm('선택한 행을 삭제하시겠습니까?');
+    // const handleScroll = () => {
+    //     if (!isLoading && hasMore) {
+    //         const table = document.getElementById('infinite-scroll-table');
+    //         if (
+    //             table &&
+    //             table.scrollTop + table.clientHeight >= table.scrollHeight - 100
+    //         ) {
+    //             fetchMoreData();
+    //         }
+    //     }
+    // };
 
-        if (shouldDelete) {
-            const newData = [...data];
-            newData.splice(index, 1);
-            setData(newData);
-        }
-    };
+    // const handleDelete = (index: number) => {
+    //     const shouldDelete = window.confirm('선택한 행을 삭제하시겠습니까?');
 
-    const handleEdit = (index: number) => {
-        setEditIndex(index);
-        setEditModalData(data[index]);
-    };
+    //     if (shouldDelete) {
+    //         const newData = [...data];
+    //         newData.splice(index, 1);
+    //         setData(newData);
+    //     }
+    // };
 
-    const handleModalSave = (updatedData: Partial<TableRow>) => {
-        const newData = [...data];
-        newData[editIndex as number] = {
-            ...data[editIndex as number],
-            ...updatedData,
-        };
-        setData(newData);
-        setEditIndex(null);
-    };
+    // const handleEdit = (index: number) => {
+    //     setEditIndex(index);
+    //     setEditModalData(data[index]);
+    // };
 
-    const handleModalCancel = () => {
-        setEditIndex(null);
-    };
+    // const handleModalSave = (updatedData: Partial<TableRow>) => {
+    //     const newData = [...data];
+    //     newData[editIndex as number] = {
+    //         ...data[editIndex as number],
+    //         ...updatedData,
+    //     };
+    //     setData(newData);
+    //     setEditIndex(null);
+    // };
+
+    // const handleModalCancel = () => {
+    //     setEditIndex(null);
+    // };
 
     const handleCheckboxChange = (index: number) => {
         const isSelected = selectedRows.includes(index);
@@ -129,17 +135,17 @@ const SuperuserList: React.FC = () => {
         setSelectedRows(selectAll ? [] : data.map((_, index) => index));
     };
 
-    const handleDeleteSelected = () => {
-        const shouldDelete = window.confirm('선택한 행을 삭제하시겠습니까?');
+    // const handleDeleteSelected = () => {
+    //     const shouldDelete = window.confirm('선택한 행을 삭제하시겠습니까?');
 
-        if (shouldDelete) {
-            const newData = data.filter(
-                (_, index) => !selectedRows.includes(index),
-            );
-            setData(newData);
-            setSelectedRows([]);
-        }
-    };
+    //     if (shouldDelete) {
+    //         const newData = data.filter(
+    //             (_, index) => !selectedRows.includes(index),
+    //         );
+    //         setData(newData);
+    //         setSelectedRows([]);
+    //     }
+    // };
 
     const handleEmailModalOpen = () => {
         if (selectedRows.length > 0) {
@@ -155,19 +161,23 @@ const SuperuserList: React.FC = () => {
         setShowEmailModal(false);
     };
 
-    useEffect(() => {
-        fetchMoreData();
-        const table = document.getElementById('infinite-scroll-table');
-        if (table) {
-            table.addEventListener('scroll', handleScroll);
-        }
+    // useEffect(() => {
+    //     fetchMoreData();
+    //     const table = document.getElementById('infinite-scroll-table');
+    //     if (table) {
+    //         table.addEventListener('scroll', handleScroll);
+    //     }
 
-        return () => {
-            if (table) {
-                table.removeEventListener('scroll', handleScroll);
-            }
-        };
-    }, []);
+    //     return () => {
+    //         if (table) {
+    //             table.removeEventListener('scroll', handleScroll);
+    //         }
+    //     };
+    // }, []);
+
+    const handleEdit = (index: number) => {};
+    const handleDelete = (index: number) => {};
+    const handleDeleteSelected = () => {};
 
     return (
         <div id="infinite-scroll-table">
@@ -184,7 +194,7 @@ const SuperuserList: React.FC = () => {
                         <option value="아기사자">아기사자</option>
                     </select>
                 </DropDown>
-                <TextInput
+                {/* <TextInput
                     borderColor={searchInput !== '' ? '#FF7710' : '#D1D4D8'}
                 >
                     <input
@@ -204,7 +214,7 @@ const SuperuserList: React.FC = () => {
                         onClick={onSearch}
                         alt="검색"
                     />
-                </TextInput>
+                </TextInput> */}
             </FlexContainer>
             <Wrapper>
                 <HeadTable>
@@ -216,7 +226,6 @@ const SuperuserList: React.FC = () => {
                         />
                     </Table>
                     <Table className="name">이름</Table>
-                    <Table className="university">대학</Table>
                     <Table className="major">전공</Table>
                     <Table className="generation">기수</Table>
                     <Table className="part">파트</Table>
@@ -235,12 +244,9 @@ const SuperuserList: React.FC = () => {
                                 />
                             </Table>
                             <Table className="name">{item.name}</Table>
-                            <Table className="university">
-                                {item.university}
-                            </Table>
                             <Table className="major">{item.major}</Table>
                             <Table className="generation">
-                                {item.semester}기
+                                {item.ordinal}기
                             </Table>
                             <Table className="part">{item.part}</Table>
                             <Table className="role">{item.role}</Table>
@@ -260,8 +266,6 @@ const SuperuserList: React.FC = () => {
                 </BodyTable>
             </Wrapper>
 
-            {isLoading && <div>로딩 중...</div>}
-
             <SelectedActions>
                 <div>선택한 회원</div>
                 <Button onClick={handleDeleteSelected}>삭제하기</Button>
@@ -275,14 +279,10 @@ const SuperuserList: React.FC = () => {
             </SelectedActions>
 
             <PageWrapper>
-                <Pagination
-                    totalPageNum={Math.ceil(data.length / ITEMS_PER_PAGE)}
-                    pageNum={pageNumber}
-                    setPageNum={setPageNumber}
-                />
+                {renderPaginationBtn()}
             </PageWrapper>
 
-            {editIndex !== null && (
+            {/* {editIndex !== null && (
                 <EditModal
                     initialData={editModalData}
                     onSave={handleModalSave}
@@ -296,7 +296,7 @@ const SuperuserList: React.FC = () => {
                     selectedRows={selectedRows}
                     data={data}
                 />
-            )}
+            )} */}
         </div>
     );
 };
