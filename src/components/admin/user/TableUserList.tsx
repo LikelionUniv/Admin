@@ -4,13 +4,14 @@ import EditModal from './EditModal';
 import { UnivAdminUsers } from './UserList';
 import useDeleteUsers from '../../../query/delete/useDeleteUser';
 import usePatchUser from '../../../query/patch/usePatchUser';
+import { useSelectedUsers } from './SelectedUserContext';
 
 interface TableUserListProps {
     users: UnivAdminUsers[];
 }
 
 function TableUserList({ users }: TableUserListProps) {
-    const [selectedUserIds, setSelectedUserIds] = useState<number[]>([]);
+    const { selectedUserIds, setSelectedUserIds } = useSelectedUsers();
     const [editingUserId, setEditingUserId] = useState<number | null>(null);
     const [editingUser, setEditingUser] = useState<UnivAdminUsers | null>(null);
 
@@ -30,6 +31,7 @@ function TableUserList({ users }: TableUserListProps) {
             deleteUser(selectedUserIds);
         }
     };
+
     const handleEdit = (user: UnivAdminUsers) => {
         setEditingUserId(user.id);
         setEditingUser(user);

@@ -1,19 +1,38 @@
 import React from 'react';
+import { useSelectedUsers } from './SelectedUserContext';
+import useDeleteUser from '../../../query/delete/useDeleteUser';
 import styled from 'styled-components';
 
-function TableBottom() {
+const TableBottom: React.FC = () => {
+    const { selectedUserIds, setSelectedUserIds } = useSelectedUsers();
+    const { mutate } = useDeleteUser();
+
+    const handleDelete = () => {
+        if (
+            selectedUserIds.length > 0 &&
+            window.confirm('선택한 사용자를 삭제하시겠습니까?')
+        ) {
+            mutate(selectedUserIds, {
+                onSuccess: () => {
+                    setSelectedUserIds([]);
+                },
+                onError: error => {
+                    console.error('삭제 중 오류 발생:', error);
+                },
+            });
+        }
+    };
+
     return (
-        <>
-            <Wrapper>
-                <SelectedActions>
-                    <div>선택한 회원</div>
-                    <Button>삭제하기</Button>
-                    <Button style={{ color: '#4D5359' }}>이메일 보내기</Button>
-                </SelectedActions>
-            </Wrapper>
-        </>
+        <Wrapper>
+            <SelectedActions>
+                <div>선택한 회원</div>
+                <Button onClick={handleDelete}>삭제하기</Button>
+                <Button style={{ color: '#4D5359' }}>이메일 보내기</Button>
+            </SelectedActions>
+        </Wrapper>
     );
-}
+};
 
 export default TableBottom;
 
