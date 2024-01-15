@@ -22,10 +22,10 @@ const router = createBrowserRouter([
                         path: '',
                         element: <User />,
                     },
-                    {
-                        path: 'superuser',
-                        element: <Superuser />,
-                    },
+                    // {
+                    //     path: 'superuser',
+                    //     element: <Superuser />,
+                    // },
                     {
                         path: 'recruitalert',
                         element: <RecruitAlert />,

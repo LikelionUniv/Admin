@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useSelectedUsers } from './SelectedUserContext';
 import useDeleteUser from '../../../query/delete/useDeleteUser';
 import styled from 'styled-components';
+import Pagination from '../Pagination/Pagination';
 import EmailModal from './EmailModal';
 
 const TableBottom: React.FC = () => {
@@ -10,6 +11,8 @@ const TableBottom: React.FC = () => {
     const [isEmailModalOpen, setIsEmailModalOpen] = useState(false);
     const openEmailModal = () => setIsEmailModalOpen(true);
     const closeEmailModal = () => setIsEmailModalOpen(false);
+    const [page, setPage] = useState(1);
+    const [totalPage, setTotalPage] = useState<number>(1);
 
     const handleDelete = () => {
         if (
@@ -37,6 +40,13 @@ const TableBottom: React.FC = () => {
                 </Button>
             </SelectedActions>
             {isEmailModalOpen && <EmailModal onCancel={closeEmailModal} />}
+            <PageWrapper>
+                <Pagination
+                    totalPageNum={totalPage}
+                    pageNum={page}
+                    setPageNum={setPage}
+                />
+            </PageWrapper>
         </Wrapper>
     );
 };
@@ -71,4 +81,10 @@ const Button = styled.button`
     &:hover {
         background-color: #d45a07;
     }
+`;
+
+const PageWrapper = styled.div`
+    margin: 64px 0 100px 0;
+    display: flex;
+    justify-content: center;
 `;

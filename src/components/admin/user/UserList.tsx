@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import TableUserList from './TableUserList';
 import TableHead from './TableHead';
@@ -7,7 +7,7 @@ import useGetAdminUsers from '../../../query/get/useGetAdminUsers';
 import useServerSidePagination from '../../../query/get/useServerSidePagination';
 import { SelectedUsersProvider } from './SelectedUserContext';
 import OrderDropDown from './OrderDropDown';
-import SearchBar from './SearchBar';
+import SearchBar from '../Search/SearchBar';
 
 export interface UnivAdminUsers {
     id: number;
@@ -22,6 +22,8 @@ export interface UnivAdminUsers {
 function UserList({ order = 'createdDate,DESC' }) {
     const [page, setPage] = useState(1);
     const [size, setSize] = useState(10);
+    const [totalPage, setTotalPage] = useState(0);
+    const [totalUsers, setTotalUsers] = useState(0);
     const [searchQuery, setSearchQuery] = useState<string | undefined>();
 
     const { usersData, isFetching, isError, error } = useGetAdminUsers({
@@ -29,6 +31,13 @@ function UserList({ order = 'createdDate,DESC' }) {
         size,
         sort: order,
     });
+
+    useEffect(() => {
+        if (usersData) {
+            // usersData에서 totalPage 또는 totalElements를 사용하여 전체 페이지 수 계산
+            setTotalPage(Math.ceil(usersData.totalElements / size));
+        }
+    }, [usersData, size]);
 
     if (isFetching) return <div>Loading...</div>;
     if (isError) return <div>Error: {error?.message}</div>;
