@@ -1,11 +1,15 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useSelectedUsers } from './SelectedUserContext';
 import useDeleteUser from '../../../query/delete/useDeleteUser';
 import styled from 'styled-components';
+import EmailModal from './EmailModal';
 
 const TableBottom: React.FC = () => {
     const { selectedUserIds, setSelectedUserIds } = useSelectedUsers();
     const { mutate } = useDeleteUser();
+    const [isEmailModalOpen, setIsEmailModalOpen] = useState(false);
+    const openEmailModal = () => setIsEmailModalOpen(true);
+    const closeEmailModal = () => setIsEmailModalOpen(false);
 
     const handleDelete = () => {
         if (
@@ -28,8 +32,11 @@ const TableBottom: React.FC = () => {
             <SelectedActions>
                 <div>선택한 회원</div>
                 <Button onClick={handleDelete}>삭제하기</Button>
-                <Button style={{ color: '#4D5359' }}>이메일 보내기</Button>
+                <Button style={{ color: '#4D5359' }} onClick={openEmailModal}>
+                    이메일 보내기
+                </Button>
             </SelectedActions>
+            {isEmailModalOpen && <EmailModal onCancel={closeEmailModal} />}
         </Wrapper>
     );
 };

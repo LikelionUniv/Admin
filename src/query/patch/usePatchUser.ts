@@ -23,11 +23,8 @@ function usePatchUser(userId: number) {
     const { mutate } = useMutation({
         mutationFn: patchUser,
         onSuccess: () => {
-            // 성공 시 쿼리 무효화 또는 업데이트
             queryClient.invalidateQueries({ queryKey: ['users-list'] });
-            // 필요한 경우 다른 쿼리도 무효화
         },
-        // 에러 핸들링 옵션
     });
 
     return { mutate };

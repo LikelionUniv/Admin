@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import cancel from '../../../img/admin/Cancel.svg';
+import Cancel from '../../../img/admin/Cancel.svg';
 import { UserUpdateData } from '../../../query/patch/usePatchUser';
 import { UnivAdminUsers } from './UserList';
 import usePatchUser from '../../../query/patch/usePatchUser';
@@ -42,7 +42,7 @@ const EditModal: React.FC<EditModalProps> = ({ userId, user, onClose }) => {
                 <Title>회원 정보 수정하기</Title>
                 <CancelIcon
                     style={{ width: '18px', height: '18px' }}
-                    src={cancel}
+                    src={Cancel}
                     onClick={handleCancel}
                     alt="취소"
                 />

@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import cancel from '../../../img/admin/Cancel.svg';
-import { TableRow } from './TableHead';
+import useGetAdminUsers from '../../../query/get/useGetAdminUsers';
+import { useSelectedUsers } from './SelectedUserContext';
+import useSendEmail from '../../../query/post/useSendEmail';
 
 interface SelectedFile {
     id: number;
@@ -10,72 +12,80 @@ interface SelectedFile {
 
 interface EmailModalProps {
     onCancel: () => void;
-    selectedRows: number[];
-    data: TableRow[];
 }
 
-const EmailModal: React.FC<EmailModalProps> = ({
-    onCancel,
-    selectedRows,
-    data,
-}) => {
-    const [sender] = useState('XXXX@likelion.org');
+const EmailModal: React.FC<EmailModalProps> = ({ onCancel }) => {
+    const [sender] = useState('xxx@likelion.org');
     const [recipient, setRecipient] = useState<string[]>([]);
     const [subject, setSubject] = useState('');
     const [content, setContent] = useState('');
     const [attachment, setAttachment] = useState<File | null>(null);
     const [selectedFiles, setSelectedFiles] = useState<SelectedFile[]>([]);
+    const { selectedUserIds } = useSelectedUsers();
     const [isButtonActive, setIsButtonActive] = useState(false);
+    const sendEmail = useSendEmail();
 
-    // Function to handle sending the email
-    const handleSendEmail = () => {
-        const selectedRecipients = selectedRows.map(
-            index => data[index]?.name || '',
-        );
-        setRecipient(selectedRecipients);
+    const { usersData } = useGetAdminUsers({
+        page: 1,
+        size: selectedUserIds.length,
+        sort: 'id',
+    });
 
-        setRecipient([]);
-        setSubject('');
-        setContent('');
-        setAttachment(null);
-
-        // Close the modal
-        onCancel();
-    };
-
-    const selectedRecipientsString = selectedRows
-        .map(index => data[index]?.name || '')
-        .join(', ');
-
-    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const newFiles = Array.from(e.target.files || []).map(
-            (file, index) => ({
-                id: index,
+    // 파일 첨부 처리 함수
+    const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        if (event.target.files) {
+            const filesArray = Array.from(event.target.files).map(file => ({
+                id: Math.random(), // 임시 ID 생성
                 name: file.name,
-            }),
-        );
-        setSelectedFiles(prevFiles => [...prevFiles, ...newFiles]);
+            }));
+            setSelectedFiles(filesArray);
+        }
     };
 
+    // 파일 제거 함수
     const removeFile = (id: number) => {
-        setSelectedFiles(prevFiles => prevFiles.filter(file => file.id !== id));
+        setSelectedFiles(selectedFiles.filter(file => file.id !== id));
+    };
+
+    const handleSendEmail = () => {
+        const emailData = {
+            roles: selectedUserIds.map(id => `User-${id}`),
+            subject: subject,
+            contentsType: 'text/plain',
+            contents: content,
+        };
+
+        sendEmail.mutate(emailData, {
+            onSuccess: data => {
+                console.log('Email sent successfully:', data);
+            },
+            onError: error => {
+                console.error('Error sending email:', error);
+            },
+        });
     };
 
     useEffect(() => {
-        setIsButtonActive(subject.trim() !== '' && content.trim() !== '');
-    }, [subject, content]);
+        if (usersData) {
+            const selectedEmails = usersData.data
+                .filter(user => selectedUserIds.includes(user.id))
+                .map(user => user.email);
+            setRecipient(selectedEmails);
+        }
+    }, [selectedUserIds, usersData]);
+
+    useEffect(() => {
+        setIsButtonActive(
+            subject !== '' && content !== '' && recipient.length > 0,
+        );
+    }, [subject, content, recipient]);
 
     return (
         <>
             <BackgroundOverlay />
             <Wrapper>
                 <Title>이메일 보내기</Title>
-                <CancelIcon
-                    style={{ width: '18px', height: '18px' }}
-                    src={cancel}
-                    onClick={onCancel}
-                    alt="취소"
-                />
+                <CancelIcon src={cancel} onClick={onCancel} alt="취소" />
 
                 <Divider />
                 <Content>
@@ -89,7 +99,7 @@ const EmailModal: React.FC<EmailModalProps> = ({
                     <div className="BoxName">받는 사람</div>
                     <input
                         className="InputBox"
-                        placeholder={`${selectedRecipientsString}`}
+                        value={recipient.join('; ')}
                         readOnly
                     />
                     <Divider />

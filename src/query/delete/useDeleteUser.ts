@@ -21,7 +21,6 @@ function useDeleteUser() {
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['users-list'] });
         },
-        // 에러 핸들링 옵션들
     });
 
     return { mutate };
