@@ -1,40 +1,67 @@
-import React, { useEffect, useState } from 'react';
+import React, { Suspense, useEffect, useState } from 'react';
 import styled from 'styled-components';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+// import OrderDropDown from './AdminOrderDropDown';
+import UserList from './user/UserList';
 
-interface User {
-  id: number;
-  name: string;
-  email: string;
+function User() {
+    const [users, setUsers] = useState<string | undefined>();
+
+    return (
+        <Wrapper>
+            <div className="TitleUniversity">
+                <Title>회원정보</Title>
+                <UniversityName>홍익대학교</UniversityName>
+            </div>
+
+            <Suspense fallback={<div>loading...</div>}>
+                <UserList />
+            </Suspense>
+        </Wrapper>
+    );
 }
 
-const UserList = () => {
-  const [users, setUsers] = useState<User[]>([]);
+export default User;
 
-  useEffect(() => {
-    const fetchUsers = async () => {
-      try {
-        const response = await axios.get<User[]>('/api/v1/univAdmin/users');
-        setUsers(response.data);
-      } catch (error) {
-        console.error('Error:', error);
-      }
-    };
+/* interface User {
+    id: number;
+    name: string;
+    email: string;
+    major: string;
+    part: string;
+    ordinal: number;
+    role: string;
+} */
 
-    fetchUsers();
-  }, []);
+/* const UserList = () => {
+    const [users, setUsers] = useState<User[]>([]);
 
-  return (
-    <div>
-      {users.map((user) => (
-        <div key={user.id}>
-          <h2>{user.name}</h2>
-          <p>{user.email}</p>
+    useEffect(() => {
+        const fetchUsers = async () => {
+            try {
+                const response = await axios.get<User[]>(
+                    '/api/admin/v1/univAdmin/univ/users',
+                );
+                setUsers(response.data);
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        };
+
+        fetchUsers();
+    }, []);
+
+    return (
+        <div>
+            {users.map(user => (
+                <div key={user.id}>
+                    <h2>{user.name}</h2>
+                    <p>{user.email}</p>
+                </div>
+            ))}
         </div>
-      ))}
-    </div>
-  );
+    );
 };
 
 const User: React.FC = () => {
@@ -52,7 +79,7 @@ const User: React.FC = () => {
             </div>
         </Wrapper>
     );
-};
+}; */
 
 const Wrapper = styled.div`
     width: 74.5%;
@@ -94,5 +121,3 @@ const Divider = styled.div`
     margin-top: 26px;
     margin-bottom: 4px;
 `;
-
-export { User, UserList };

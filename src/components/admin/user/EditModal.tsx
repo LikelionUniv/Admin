@@ -1,47 +1,43 @@
 import React, { useState, useEffect } from 'react';
-import { TableRow } from './UserList';
 import styled from 'styled-components';
 import cancel from '../../../img/admin/Cancel.svg';
+import { UserUpdateData } from '../../../query/patch/usePatchUser';
+import { UnivAdminUsers } from './UserList';
+import usePatchUser from '../../../query/patch/usePatchUser';
 
 interface EditModalProps {
-    initialData: Partial<TableRow>;
-    onSave: (updatedData: Partial<TableRow>) => void;
-    onCancel: () => void;
+    userId: number;
+    user: UnivAdminUsers;
+    onClose: () => void;
 }
 
-const EditModal: React.FC<EditModalProps> = ({
-    initialData,
-    onSave,
-    onCancel,
-}) => {
-    const [editedData, setEditedData] = useState(initialData);
+const EditModal: React.FC<EditModalProps> = ({ userId, user, onClose }) => {
+    const [editedData, setEditedData] = useState<UserUpdateData>({ ...user });
+    const { mutate: updateUser } = usePatchUser(userId);
 
-    useEffect(() => {
-        setEditedData(initialData);
-    }, [initialData]);
+    const handleChange = (field: keyof UserUpdateData, value: any) => {
+        setEditedData(prev => ({ ...prev, [field]: value }));
+    };
 
     const handleSave = () => {
-        const SaveComplete = window.alert('수정 완료');
-        onSave(editedData);
+        updateUser(editedData, {
+            onSuccess: () => {
+                // Handle successful update
+                onClose();
+            },
+            onError: error => {
+                // Handle error
+                console.error(error);
+            },
+        });
     };
 
     const handleCancel = () => {
-        onCancel();
-    };
-
-    const handleChange = (
-        field: keyof TableRow,
-        value: string | number | undefined,
-    ) => {
-        setEditedData(prev => ({
-            ...prev,
-            [field]: value,
-        }));
+        onClose();
     };
 
     return (
-        <>
-            <BackgroundOverlay />
+        <BackgroundOverlay>
             <Wrapper>
                 <Title>회원 정보 수정하기</Title>
                 <CancelIcon
@@ -68,13 +64,7 @@ const EditModal: React.FC<EditModalProps> = ({
                         onChange={e => handleChange('major', e.target.value)}
                     />
                     <div className="BoxName">이메일</div>
-
-                    <input
-                        className="InputBox"
-                        type="text"
-                        value={editedData.email || ''}
-                        readOnly
-                    />
+                    <input className="InputBox" type="text" readOnly />
                 </Content>
 
                 <DropDownContainer>
@@ -82,11 +72,11 @@ const EditModal: React.FC<EditModalProps> = ({
                         <div className="DropdownName">기수 변경</div>
                         <select
                             className="DropdownList"
-                            value={editedData.semester || ''}
+                            value={editedData.ordinal || ''}
                             onChange={e =>
                                 handleChange(
-                                    'semester',
-                                    parseInt(e.target.value, 10) || undefined,
+                                    'ordinal',
+                                    parseInt(e.target.value, 10),
                                 )
                             }
                         >
@@ -118,8 +108,8 @@ const EditModal: React.FC<EditModalProps> = ({
                         <div className="DropdownName">역할 변경</div>
                         <select
                             className="DropdownList"
-                            value={editedData.role || ''}
-                            onChange={e => handleChange('role', e.target.value)}
+                            // value={editedData.role || ''}
+                            // onChange={e => handleChange('role', e.target.value)}
                         >
                             <option value="대표">대표</option>
                             <option value="운영진">운영진</option>
@@ -129,7 +119,7 @@ const EditModal: React.FC<EditModalProps> = ({
                 </DropDownContainer>
                 <Button onClick={handleSave}>수정하기</Button>
             </Wrapper>
-        </>
+        </BackgroundOverlay>
     );
 };
 

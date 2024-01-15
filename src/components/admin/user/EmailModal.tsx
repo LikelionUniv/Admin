@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import cancel from '../../../img/admin/Cancel.svg';
-import { TableRow } from './UserList';
+import { TableRow } from './TableHead';
 
 interface SelectedFile {
     id: number;

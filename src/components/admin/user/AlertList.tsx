@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 
-import { UserData, fetchDataFromApi } from './UserData';
+import { UserData, fetchDataFromApi } from './UserList';
 import styled from 'styled-components';
 
 export interface TableRow {
