@@ -1,15 +1,27 @@
 import React from 'react';
 import styled from 'styled-components';
+import { useSelectedUsers } from './SelectedUserContext';
 
 function TableHead() {
+    const { selectAll, setSelectAll } = useSelectedUsers();
+
+    const handleSelectAllChange = (
+        event: React.ChangeEvent<HTMLInputElement>,
+    ) => {
+        setSelectAll(event.target.checked);
+    };
+
     return (
         <>
             <Wrapper>
                 <HeadTable>
                     <Table className="check">
-                        <input type="checkbox" />
+                        <input
+                            type="checkbox"
+                            checked={selectAll}
+                            onChange={handleSelectAllChange}
+                        />
                     </Table>
-
                     <Table className="name">이름</Table>
                     <Table className="major">전공</Table>
                     <Table className="ordinal">기수</Table>

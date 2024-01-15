@@ -28,7 +28,6 @@ function UserList({ order = 'createdDate,DESC' }) {
     });
 
     if (isFetching) return <div>Loading...</div>;
-
     if (isError) return <div>Error: {error?.message}</div>;
 
     const users = Array.isArray(usersData?.data) ? usersData.data : [];
@@ -37,9 +36,7 @@ function UserList({ order = 'createdDate,DESC' }) {
         <SelectedUsersProvider>
             <Wrapper>
                 <TableHead />
-                {users.map(user => (
-                    <TableUserList key={user.id} users={[user]} />
-                ))}
+                <TableUserList users={users} />
                 <TableBottom />
             </Wrapper>
         </SelectedUsersProvider>

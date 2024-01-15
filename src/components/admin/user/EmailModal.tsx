@@ -66,7 +66,7 @@ const EmailModal: React.FC<EmailModalProps> = ({ onCancel }) => {
     };
 
     useEffect(() => {
-        if (usersData) {
+        if (usersData && usersData.data) {
             const selectedEmails = usersData.data
                 .filter(user => selectedUserIds.includes(user.id))
                 .map(user => user.email);

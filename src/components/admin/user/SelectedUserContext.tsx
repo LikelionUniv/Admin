@@ -3,6 +3,8 @@ import React, { createContext, useState, useContext, ReactNode } from 'react';
 interface SelectedUserContextProps {
     selectedUserIds: number[];
     setSelectedUserIds: React.Dispatch<React.SetStateAction<number[]>>;
+    selectAll: boolean;
+    setSelectAll: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const SelectedUserContext = createContext<SelectedUserContextProps | undefined>(
@@ -27,10 +29,16 @@ export const SelectedUsersProvider: React.FC<SelectedUsersProviderProps> = ({
     children,
 }) => {
     const [selectedUserIds, setSelectedUserIds] = useState<number[]>([]);
+    const [selectAll, setSelectAll] = useState<boolean>(false);
 
     return (
         <SelectedUserContext.Provider
-            value={{ selectedUserIds, setSelectedUserIds }}
+            value={{
+                selectedUserIds,
+                setSelectedUserIds,
+                selectAll,
+                setSelectAll,
+            }}
         >
             {children}
         </SelectedUserContext.Provider>

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import EditModal from './EditModal';
 import { UnivAdminUsers } from './UserList';
@@ -11,7 +11,8 @@ interface TableUserListProps {
 }
 
 function TableUserList({ users }: TableUserListProps) {
-    const { selectedUserIds, setSelectedUserIds } = useSelectedUsers();
+    const { selectedUserIds, setSelectedUserIds, selectAll } =
+        useSelectedUsers();
     const [editingUserId, setEditingUserId] = useState<number | null>(null);
     const [editingUser, setEditingUser] = useState<UnivAdminUsers | null>(null);
 
@@ -37,6 +38,15 @@ function TableUserList({ users }: TableUserListProps) {
         setEditingUser(user);
     };
 
+    useEffect(() => {
+        if (selectAll) {
+            const allUserIds = users.map(user => user.id);
+            setSelectedUserIds(allUserIds);
+        } else {
+            setSelectedUserIds([]);
+        }
+    }, [selectAll, users]);
+
     return (
         <>
             <Wrapper>
@@ -46,6 +56,7 @@ function TableUserList({ users }: TableUserListProps) {
                             <Table className="check">
                                 <input
                                     type="checkbox"
+                                    checked={selectedUserIds.includes(user.id)}
                                     onChange={e =>
                                         handleCheckboxChange(
                                             user.id,
