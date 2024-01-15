@@ -6,6 +6,8 @@ import TableBottom from './TableBottom';
 import useGetAdminUsers from '../../../query/get/useGetAdminUsers';
 import useServerSidePagination from '../../../query/get/useServerSidePagination';
 import { SelectedUsersProvider } from './SelectedUserContext';
+import OrderDropDown from './OrderDropDown';
+import SearchBar from './SearchBar';
 
 export interface UnivAdminUsers {
     id: number;
@@ -20,6 +22,7 @@ export interface UnivAdminUsers {
 function UserList({ order = 'createdDate,DESC' }) {
     const [page, setPage] = useState(1);
     const [size, setSize] = useState(10);
+    const [searchQuery, setSearchQuery] = useState<string | undefined>();
 
     const { usersData, isFetching, isError, error } = useGetAdminUsers({
         page,
@@ -35,6 +38,10 @@ function UserList({ order = 'createdDate,DESC' }) {
     return (
         <SelectedUsersProvider>
             <Wrapper>
+                <Nav>
+                    <OrderDropDown />
+                    <SearchBar setSearchQuery={setSearchQuery} />
+                </Nav>
                 <TableHead />
                 <TableUserList users={users} />
                 <TableBottom />
@@ -48,4 +55,10 @@ export default UserList;
 const Wrapper = styled.div`
     display: flex;
     flex-direction: column;
+`;
+
+const Nav = styled.div`
+    display: flex;
+    align-items: center;
+    margin: 10px 0 10px 0;
 `;
