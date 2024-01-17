@@ -6,15 +6,18 @@ export const Container = styled.div`
     align-items: center;
     width: 300px;
     height: 40px;
+    padding: 4px;
     flex-shrink: 0;
     border-radius: 6px;
     border: 1px solid var(--Grey-400, #dcdfe3);
+    margin-left: 10px;
 `;
 
 export const Input = styled.input`
-    width: 90%;
+    height: 90%;
+    width: 80%;
     padding: 8px 16px;
-    border: 1px solid var(--Grey-400, #dcdfe3);
+    border: none;
     border-radius: 6px;
     outline: none;
 
