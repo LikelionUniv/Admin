@@ -1,7 +1,11 @@
 import { useSuspenseQuery } from '@tanstack/react-query';
 import request from '../../utils/request';
 
-interface User {
+interface useGetAdminUsersProps {
+    id: number;
+}
+
+export interface User {
     id: number;
     name: string;
     email: string;
@@ -18,37 +22,23 @@ interface UserResponse {
     currentPage: number;
 }
 
-interface UseGetUsersProps {
-    page: number;
-    size: number;
-    sort: string;
-}
-
-function useGetAdminUsers({ page, size, sort }: UseGetUsersProps) {
-    const fetchUsers = async (): Promise<UserResponse> => {
+function useGetAdminUsers({ id }: useGetAdminUsersProps) {
+    const fetchUsers = async () => {
         const response = await request<null, UserResponse, null>({
-            uri: `/api/admin/v1/univAdmin/univ/users?page=${page}&size=${size}&sort=${sort}`,
+            uri: `/api/admin/v1/univAdmin/univ/users?page=0&size=12&sort=createdDate%2CDESC`,
             method: 'get',
         });
 
         return response.data;
     };
 
-    const {
-        data: usersData,
-        isFetching,
-        isError,
-        error,
-    } = useSuspenseQuery({
-        queryKey: ['get-users', page, size, sort],
+    const { data } = useSuspenseQuery({
+        queryKey: ['get-users', id],
         queryFn: fetchUsers,
     });
 
     return {
-        usersData,
-        isFetching,
-        isError,
-        error,
+        data,
     };
 }
 

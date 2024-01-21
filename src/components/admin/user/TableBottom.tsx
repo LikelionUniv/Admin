@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { useSelectedUsers } from './SelectedUserContext';
 import useDeleteUser from '../../../query/delete/useDeleteUser';
 import styled from 'styled-components';
-import Pagination from '../Pagination/Pagination';
 import EmailModal from './EmailModal';
 
 const TableBottom: React.FC = () => {
@@ -40,13 +39,6 @@ const TableBottom: React.FC = () => {
                 </Button>
             </SelectedActions>
             {isEmailModalOpen && <EmailModal onCancel={closeEmailModal} />}
-            <PageWrapper>
-                <Pagination
-                    totalPageNum={totalPage}
-                    pageNum={page}
-                    setPageNum={setPage}
-                />
-            </PageWrapper>
         </Wrapper>
     );
 };

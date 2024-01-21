@@ -5,32 +5,33 @@ import { UnivAdminUsers } from './UserList';
 import useDeleteUsers from '../../../query/delete/useDeleteUser';
 import usePatchUser from '../../../query/patch/usePatchUser';
 import { useSelectedUsers } from './SelectedUserContext';
+import useDeleteUser from '../../../query/delete/useDeleteUser';
 
 interface TableUserListProps {
     users: UnivAdminUsers[];
+    id: number;
 }
 
-function TableUserList({ users }: TableUserListProps) {
+function TableUserList({ users, id }: TableUserListProps) {
     const { selectedUserIds, setSelectedUserIds, selectAll } =
         useSelectedUsers();
     const [editingUserId, setEditingUserId] = useState<number | null>(null);
     const [editingUser, setEditingUser] = useState<UnivAdminUsers | null>(null);
 
-    const { mutate: deleteUser } = useDeleteUsers();
+    const { mutate } = useDeleteUser({
+        userId: id,
+    });
+
+    const deleteUser = () => {
+        if (window.confirm(`선택한 사용자를 삭제하시겠습니까?`)) {
+            mutate();
+        }
+    };
 
     const handleCheckboxChange = (userId: number, isChecked: boolean) => {
         setSelectedUserIds(prev =>
             isChecked ? [...prev, userId] : prev.filter(id => id !== userId),
         );
-    };
-
-    const handleDelete = () => {
-        if (
-            selectedUserIds.length > 0 &&
-            window.confirm('선택한 사용자를 삭제하시겠습니까?')
-        ) {
-            deleteUser(selectedUserIds);
-        }
     };
 
     const handleEdit = (user: UnivAdminUsers) => {
@@ -77,7 +78,7 @@ function TableUserList({ users }: TableUserListProps) {
                                 </button>
                             </Table>
                             <Table>
-                                <button onClick={handleDelete}>삭제</button>
+                                <button onClick={deleteUser}>삭제</button>
                             </Table>
                         </TableBody>
                     ))}

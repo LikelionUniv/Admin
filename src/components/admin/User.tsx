@@ -4,9 +4,12 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 // import OrderDropDown from './AdminOrderDropDown';
 import UserList from './user/UserList';
+import OrderDropDown from './user/OrderDropDown';
+import SearchBar from './Search/SearchBar';
 
 function User() {
     const [users, setUsers] = useState<string | undefined>();
+    const [searchQuery, setSearchQuery] = useState<string | undefined>();
 
     return (
         <Wrapper>
@@ -14,7 +17,10 @@ function User() {
                 <Title>회원정보</Title>
                 <UniversityName>홍익대학교</UniversityName>
             </div>
-
+            <Nav>
+                <OrderDropDown />
+                <SearchBar setSearchQuery={setSearchQuery} />
+            </Nav>
             <Suspense fallback={<div>loading...</div>}>
                 <UserList />
             </Suspense>
@@ -88,6 +94,12 @@ const Wrapper = styled.div`
         display: flex;
         align-items: baseline;
     }
+`;
+
+const Nav = styled.div`
+    display: flex;
+    align-items: center;
+    margin: 10px 0 10px 0;
 `;
 
 const Title = styled.div`

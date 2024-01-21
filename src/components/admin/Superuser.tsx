@@ -1,7 +1,7 @@
 import React, { useContext, useState } from 'react';
 import styled from 'styled-components';
 import SuperuserList from './user/SuperuserList';
-import AlertList from './user/AlertList';
+import AlertList from './recruit/AlarmList';
 import { useNavigate } from 'react-router-dom';
 
 const contentSubtitles: Record<string, string> = {
