@@ -1,41 +1,36 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
+import usePatchUser, { UserType } from '../../../query/patch/usePatchUser';
 import Cancel from '../../../img/admin/Cancel.svg';
-import { UserUpdateData } from '../../../query/patch/usePatchUser';
-import { UnivAdminUsers } from './UserList';
-import usePatchUser from '../../../query/patch/usePatchUser';
 
 interface EditModalProps {
     userId: number;
-    user: UnivAdminUsers;
+    user: UserType;
     onClose: () => void;
 }
 
 const EditModal: React.FC<EditModalProps> = ({ userId, user, onClose }) => {
-    const [editedData, setEditedData] = useState<UserUpdateData>({ ...user });
-    const { mutate: updateUser } = usePatchUser(userId);
+    const [editedData, setEditedData] = useState<UserType>({ ...user });
+    const { mutate: updateUser } = usePatchUser({ userId });
 
-    const handleChange = (field: keyof UserUpdateData, value: any) => {
+    const handleChange = (field: keyof UserType, value: any) => {
         setEditedData(prev => ({ ...prev, [field]: value }));
     };
 
     const handleSave = () => {
         updateUser(editedData, {
             onSuccess: () => {
-                // Handle successful update
-                onClose();
+                onClose(); // 수정 성공 후 모달 닫기
             },
             onError: error => {
-                // Handle error
-                console.error(error);
+                console.error(error); // 에러 처리
             },
         });
     };
 
     const handleCancel = () => {
-        onClose();
+        onClose(); // 모달 닫기
     };
-
     return (
         <BackgroundOverlay>
             <Wrapper>

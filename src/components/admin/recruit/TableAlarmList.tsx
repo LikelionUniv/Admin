@@ -1,22 +1,25 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import { IRecruit } from './AlarmList2';
-import useGetRecruitList from '../../../query/get/useGetRecruitList';
+import { Alarm } from './AlarmList';
+import useGetRecruitList from '../../../query/get/useGetAlarmList';
+import { useSelectedUsers } from './SelectedUserContext';
 
 interface TableAlarmListProps {
-    users: IRecruit[];
+    alarms: Alarm[];
 }
 
-function TableAlarmList({ users }: TableAlarmListProps) {
+function TableAlarmList({ alarms }: TableAlarmListProps) {
+    const { selectedUserIds, setSelectedUserIds, selectAll } =
+        useSelectedUsers();
+
     return (
         <Wrapper>
-            {users.map((user, index) => (
+            {alarms.map((alarm, index) => (
                 <TableBody key={index}>
                     <Table className="check">
                         <input type="checkbox" />
                     </Table>
-                    <Table className="name">{user.name}</Table>
-                    <Table className="email">{user.email}</Table>
+                    <Table className="name">{alarm.universityName}</Table>
                 </TableBody>
             ))}
         </Wrapper>

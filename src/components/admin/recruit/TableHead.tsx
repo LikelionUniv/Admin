@@ -1,20 +1,29 @@
 import React from 'react';
 import styled from 'styled-components';
+import { useSelectedUsers } from './SelectedUserContext';
 
 function TableHead() {
+    const { selectAll, setSelectAll } = useSelectedUsers();
+
+    const handleSelectAllChange = (
+        event: React.ChangeEvent<HTMLInputElement>,
+    ) => {
+        setSelectAll(event.target.checked);
+    };
+
     return (
         <>
             <Wrapper>
                 <HeadTable>
                     <Table className="check">
-                        <input type="checkbox" />
+                        <input
+                            type="checkbox"
+                            checked={selectAll}
+                            onChange={handleSelectAllChange}
+                        />
                     </Table>
-                    <Table className="name">이름</Table>
-                    <Table className="major">전공</Table>
-                    <Table className="ordinal">기수</Table>
-                    <Table className="part">파트</Table>
-                    <Table className="role">역할</Table>
                     <Table className="email">이메일</Table>
+                    <Table className="date">알림 신청 날짜</Table>
                 </HeadTable>
                 <Divider />
             </Wrapper>
@@ -33,39 +42,12 @@ const Wrapper = styled.div`
     justify-content: space-between;
     max-height: 1660px;
 
-    .check {
-        margin: 0 10px 0 0;
-        height: 24px;
-        accent-color: #ff7710;
-        color: #ffffff;
-    }
-
-    .name {
-        width: 83px;
-        height: 24px;
-    }
-
-    .major {
-        width: 135px;
-        height: 24px;
-    }
-
-    .ordinal {
-        width: 48px;
-        height: 24px;
-    }
-
-    .part {
-        width: 75px;
-        height: 24px;
-    }
-
     .email {
         width: 311px;
         height: 24px;
     }
 
-    .role {
+    .date {
         width: 62px;
         height: 24px;
     }

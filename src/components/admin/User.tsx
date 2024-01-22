@@ -9,6 +9,7 @@ import SearchBar from './Search/SearchBar';
 
 function User() {
     const [users, setUsers] = useState<string | undefined>();
+    const [order, setOrder] = useState<string | undefined>();
     const [searchQuery, setSearchQuery] = useState<string | undefined>();
 
     return (
@@ -22,7 +23,7 @@ function User() {
                 <SearchBar setSearchQuery={setSearchQuery} />
             </Nav>
             <Suspense fallback={<div>loading...</div>}>
-                <UserList />
+                <UserList order={order} searchQuery={searchQuery} />
             </Suspense>
         </Wrapper>
     );

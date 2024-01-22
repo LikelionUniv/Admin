@@ -1,30 +1,35 @@
 import React, { useState } from 'react';
 import { useSelectedUsers } from './SelectedUserContext';
-import useDeleteUser from '../../../query/delete/useDeleteUser';
+import useDeleteUserList from '../../../query/delete/useDeleteUserList';
 import styled from 'styled-components';
 import EmailModal from './EmailModal';
 
 const TableBottom: React.FC = () => {
     const { selectedUserIds, setSelectedUserIds } = useSelectedUsers();
-    const { mutate } = useDeleteUser();
+    const { mutate } = useDeleteUserList(); // 수정된 훅 사용
     const [isEmailModalOpen, setIsEmailModalOpen] = useState(false);
     const openEmailModal = () => setIsEmailModalOpen(true);
     const closeEmailModal = () => setIsEmailModalOpen(false);
-    const [page, setPage] = useState(1);
-    const [totalPage, setTotalPage] = useState<number>(1);
 
     const handleDelete = () => {
         if (
             selectedUserIds.length > 0 &&
             window.confirm('선택한 사용자를 삭제하시겠습니까?')
         ) {
-            mutate(selectedUserIds, {
-                onSuccess: () => {
-                    setSelectedUserIds([]);
-                },
-                onError: error => {
-                    console.error('삭제 중 오류 발생:', error);
-                },
+            // 각 사용자 ID에 대해 삭제 요청을 수행
+            selectedUserIds.forEach(userId => {
+                mutate(userId, {
+                    onSuccess: () => {
+                        // 삭제 성공 시, 선택된 사용자 목록에서 해당 사용자 ID 제거
+                        setSelectedUserIds(prevIds =>
+                            prevIds.filter(id => id !== userId),
+                        );
+                    },
+                    onError: error => {
+                        // 에러 처리
+                        console.error('삭제 중 오류 발생:', error);
+                    },
+                });
             });
         }
     };

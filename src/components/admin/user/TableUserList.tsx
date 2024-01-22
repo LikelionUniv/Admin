@@ -1,30 +1,35 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import EditModal from './EditModal';
-import { UnivAdminUsers } from './UserList';
+import { User } from './UserList';
 import useDeleteUsers from '../../../query/delete/useDeleteUser';
 import usePatchUser from '../../../query/patch/usePatchUser';
 import { useSelectedUsers } from './SelectedUserContext';
 import useDeleteUser from '../../../query/delete/useDeleteUser';
 
 interface TableUserListProps {
-    users: UnivAdminUsers[];
+    users: User[];
     id: number;
+}
+
+export interface UserType {
+    name: string;
+    major: string;
+    part: string;
+    ordinal: number;
 }
 
 function TableUserList({ users, id }: TableUserListProps) {
     const { selectedUserIds, setSelectedUserIds, selectAll } =
         useSelectedUsers();
     const [editingUserId, setEditingUserId] = useState<number | null>(null);
-    const [editingUser, setEditingUser] = useState<UnivAdminUsers | null>(null);
+    const [editingUser, setEditingUser] = useState<User | null>(null);
 
-    const { mutate } = useDeleteUser({
-        userId: id,
-    });
+    const { mutate } = useDeleteUser({ userId: id });
 
-    const deleteUser = () => {
-        if (window.confirm(`선택한 사용자를 삭제하시겠습니까?`)) {
-            mutate();
+    const deleteUser = (userId: number) => {
+        if (window.confirm('선택한 사용자를 삭제하시겠습니까?')) {
+            mutate(userId);
         }
     };
 
@@ -34,7 +39,7 @@ function TableUserList({ users, id }: TableUserListProps) {
         );
     };
 
-    const handleEdit = (user: UnivAdminUsers) => {
+    const handleEdit = (user: User) => {
         setEditingUserId(user.id);
         setEditingUser(user);
     };
@@ -78,7 +83,9 @@ function TableUserList({ users, id }: TableUserListProps) {
                                 </button>
                             </Table>
                             <Table>
-                                <button onClick={deleteUser}>삭제</button>
+                                <button onClick={() => deleteUser(user.id)}>
+                                    삭제
+                                </button>
                             </Table>
                         </TableBody>
                     ))}

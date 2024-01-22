@@ -1,16 +1,12 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import request from '../../utils/request';
 
-interface useDeleteUserProps {
-    userId: number;
-}
-
-function useDeleteUser({ userId }: useDeleteUserProps) {
+function useDeleteUser() {
     const queryClient = useQueryClient();
 
     const deleteUser = async (userId: number) => {
         await request<null, null, null>({
-            uri: `/api/admin/v1/univAdmin/users/${userId}`,
+            uri: `/api/admin/v1/univAdmin/users`,
             method: 'DELETE',
         });
     };
@@ -26,10 +22,10 @@ function useDeleteUser({ userId }: useDeleteUserProps) {
                 ],
             });
             queryClient.invalidateQueries({
-                queryKey: ['get-users', userId],
+                queryKey: ['get-users'],
             });
 
-            alert(`${userId} 사용자가 삭제되었습니다.`);
+            alert(`사용자가 삭제되었습니다.`);
         },
     });
 
