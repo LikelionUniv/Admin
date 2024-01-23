@@ -5,7 +5,8 @@ import styled from 'styled-components';
 import EmailModal from './EmailModal';
 
 const TableBottom: React.FC = () => {
-    const { selectedUserIds, setSelectedUserIds } = useSelectedUsers();
+    const { selectedUserIds, setSelectedUserIds, selectedUserEmails } =
+        useSelectedUsers(); // 이메일 정보를 가져옵니다
     const { mutate } = useDeleteUserList(); // 수정된 훅 사용
     const [isEmailModalOpen, setIsEmailModalOpen] = useState(false);
     const openEmailModal = () => setIsEmailModalOpen(true);
@@ -34,16 +35,26 @@ const TableBottom: React.FC = () => {
         }
     };
 
+    const handleSendEmail = () => {
+        console.log('Sending emails to:', selectedUserEmails); // 이메일 보내기 로직을 추가할 수 있습니다.
+        openEmailModal();
+    };
+
     return (
         <Wrapper>
             <SelectedActions>
                 <div>선택한 회원</div>
                 <Button onClick={handleDelete}>삭제하기</Button>
-                <Button style={{ color: '#4D5359' }} onClick={openEmailModal}>
+                <Button style={{ color: '#4D5359' }} onClick={handleSendEmail}>
                     이메일 보내기
                 </Button>
             </SelectedActions>
-            {isEmailModalOpen && <EmailModal onCancel={closeEmailModal} />}
+            {isEmailModalOpen && (
+                <EmailModal
+                    selectedEmails={selectedUserEmails}
+                    onCancel={closeEmailModal}
+                />
+            )}
         </Wrapper>
     );
 };

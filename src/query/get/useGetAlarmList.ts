@@ -5,27 +5,30 @@ interface UseGetAlarmsProps {
     generation: number;
 }
 
-interface Recruit {
+export interface IAlarmList {
+    universityName: string;
+    recruits: IRecruits[];
+}
+
+interface IRecruits {
     name: string;
     email: string;
     phone: string;
     generation: number;
 }
 
-export interface Alarm {
-    universityName: string;
-    recruits: [];
-}
-
-interface AlarmResponse {
-    data: Alarm[];
+interface AlarmListParam {
+    generation: number;
 }
 
 function useGetAlarmList({ generation }: UseGetAlarmsProps) {
     const fetchAlarmsList = async () => {
-        const response = await request<null, AlarmResponse, null>({
+        const response = await request<null, IAlarmList, AlarmListParam>({
             uri: `/api/admin/v1/alarm/recruit?generation=${generation}`,
             method: 'get',
+            params: {
+                generation,
+            },
         });
 
         return response.data;

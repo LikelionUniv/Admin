@@ -1,11 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import EditModal from './EditModal';
+import EditModal from './ModifyUser';
 import { User } from './UserList';
 import useDeleteUsers from '../../../query/delete/useDeleteUser';
 import usePatchUser from '../../../query/patch/usePatchUser';
 import { useSelectedUsers } from './SelectedUserContext';
 import useDeleteUser from '../../../query/delete/useDeleteUser';
+import DeleteUser from './DeleteUser';
+import EmailModal from './EmailModal';
+import ModifyUser from './ModifyUser';
 
 interface TableUserListProps {
     users: User[];
@@ -20,22 +23,31 @@ export interface UserType {
 }
 
 function TableUserList({ users, id }: TableUserListProps) {
-    const { selectedUserIds, setSelectedUserIds, selectAll } =
-        useSelectedUsers();
+    const {
+        selectedUserIds,
+        setSelectedUserIds,
+        selectedUserEmails,
+        setSelectedUserEmails,
+        selectAll,
+    } = useSelectedUsers();
     const [editingUserId, setEditingUserId] = useState<number | null>(null);
     const [editingUser, setEditingUser] = useState<User | null>(null);
+    const selectedEmails = users
+        .filter(user => selectedUserIds.includes(user.id))
+        .map(user => user.email);
 
-    const { mutate } = useDeleteUser({ userId: id });
-
-    const deleteUser = (userId: number) => {
-        if (window.confirm('선택한 사용자를 삭제하시겠습니까?')) {
-            mutate(userId);
-        }
-    };
-
-    const handleCheckboxChange = (userId: number, isChecked: boolean) => {
+    const handleCheckboxChange = (
+        userId: number,
+        userEmail: string,
+        isChecked: boolean,
+    ) => {
         setSelectedUserIds(prev =>
             isChecked ? [...prev, userId] : prev.filter(id => id !== userId),
+        );
+        setSelectedUserEmails(prev =>
+            isChecked
+                ? [...prev, userEmail]
+                : prev.filter(email => email !== userEmail),
         );
     };
 
@@ -66,6 +78,7 @@ function TableUserList({ users, id }: TableUserListProps) {
                                     onChange={e =>
                                         handleCheckboxChange(
                                             user.id,
+                                            user.email,
                                             e.target.checked,
                                         )
                                     }
@@ -83,16 +96,14 @@ function TableUserList({ users, id }: TableUserListProps) {
                                 </button>
                             </Table>
                             <Table>
-                                <button onClick={() => deleteUser(user.id)}>
-                                    삭제
-                                </button>
+                                <DeleteUser id={user.id} userName={user.name} />
                             </Table>
                         </TableBody>
                     ))}
                 </BodyTable>
             </Wrapper>
             {editingUserId && editingUser && (
-                <EditModal
+                <ModifyUser
                     userId={editingUserId}
                     user={editingUser}
                     onClose={() => {

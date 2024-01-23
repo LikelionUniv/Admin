@@ -92,10 +92,10 @@ const EditModal: React.FC<EditModalProps> = ({ userId, user, onClose }) => {
                             value={editedData.part || ''}
                             onChange={e => handleChange('part', e.target.value)}
                         >
-                            <option value="기획">기획</option>
-                            <option value="디자인">디자인</option>
-                            <option value="프론트엔드">프론트엔드</option>
-                            <option value="백엔드">백엔드</option>
+                            <option value="PM_DESIGNER">기획</option>
+                            <option value="PM_DESIGNER">디자인</option>
+                            <option value="FRONTEND">프론트엔드</option>
+                            <option value="BACKEND">백엔드</option>
                         </select>
                     </DropDown>
 
@@ -103,12 +103,12 @@ const EditModal: React.FC<EditModalProps> = ({ userId, user, onClose }) => {
                         <div className="DropdownName">역할 변경</div>
                         <select
                             className="DropdownList"
-                            // value={editedData.role || ''}
-                            // onChange={e => handleChange('role', e.target.value)}
+                            value={editedData.role || ''}
+                            onChange={e => handleChange('role', e.target.value)}
                         >
-                            <option value="대표">대표</option>
-                            <option value="운영진">운영진</option>
-                            <option value="아기사자">아기사자</option>
+                            <option value="UNIVERSITY_ADMIN">대표</option>
+                            <option value="MANAGER">운영진</option>
+                            <option value="USER">아기사자</option>
                         </select>
                     </DropDown>
                 </DropDownContainer>

@@ -14,7 +14,10 @@ interface EmailModalProps {
     onCancel: () => void;
 }
 
-const EmailModal: React.FC<EmailModalProps> = ({ onCancel }) => {
+const EmailModal: React.FC<EmailModalProps & { selectedEmails: string[] }> = ({
+    onCancel,
+    selectedEmails,
+}) => {
     const [sender] = useState('xxx@likelion.org');
     const [recipient, setRecipient] = useState<string[]>([]);
     const [subject, setSubject] = useState('');
@@ -24,12 +27,6 @@ const EmailModal: React.FC<EmailModalProps> = ({ onCancel }) => {
     const { selectedUserIds } = useSelectedUsers();
     const [isButtonActive, setIsButtonActive] = useState(false);
     const sendEmail = useSendEmail();
-
-    const { usersData } = useGetAdminUsers({
-        page: 1,
-        size: selectedUserIds.length,
-        sort: 'id',
-    });
 
     // 파일 첨부 처리 함수
     const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -66,13 +63,9 @@ const EmailModal: React.FC<EmailModalProps> = ({ onCancel }) => {
     };
 
     useEffect(() => {
-        if (usersData && usersData.data) {
-            const selectedEmails = usersData.data
-                .filter(user => selectedUserIds.includes(user.id))
-                .map(user => user.email);
-            setRecipient(selectedEmails);
-        }
-    }, [selectedUserIds, usersData]);
+        // 선택된 이메일들을 recipient 상태에 설정
+        setRecipient(selectedEmails);
+    }, [selectedEmails]);
 
     useEffect(() => {
         setIsButtonActive(
@@ -99,7 +92,7 @@ const EmailModal: React.FC<EmailModalProps> = ({ onCancel }) => {
                     <div className="BoxName">받는 사람</div>
                     <input
                         className="InputBox"
-                        value={recipient.join('; ')}
+                        value={recipient.join(', ')}
                         readOnly
                     />
                     <Divider />

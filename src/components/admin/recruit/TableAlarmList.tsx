@@ -1,27 +1,27 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import { Alarm } from './AlarmList';
 import useGetRecruitList from '../../../query/get/useGetAlarmList';
 import { useSelectedUsers } from './SelectedUserContext';
+import { useParams } from 'react-router-dom';
+import useGetAlarmList from '../../../query/get/useGetAlarmList';
 
-interface TableAlarmListProps {
-    alarms: Alarm[];
-}
-
-function TableAlarmList({ alarms }: TableAlarmListProps) {
+function TableAlarmList() {
     const { selectedUserIds, setSelectedUserIds, selectAll } =
         useSelectedUsers();
 
+    const { generation } = useParams();
+    const { data } = useGetAlarmList({
+        generation: Number(generation),
+    });
+
     return (
         <Wrapper>
-            {alarms.map((alarm, index) => (
-                <TableBody key={index}>
-                    <Table className="check">
-                        <input type="checkbox" />
-                    </Table>
-                    <Table className="name">{alarm.universityName}</Table>
-                </TableBody>
-            ))}
+            <TableBody>
+                <Table className="check">
+                    <input type="checkbox" />
+                </Table>
+                <Table className="name">{data.universityName}</Table>
+            </TableBody>
         </Wrapper>
     );
 }
