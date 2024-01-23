@@ -6,8 +6,8 @@ import EmailModal from './EmailModal';
 
 const TableBottom: React.FC = () => {
     const { selectedUserIds, setSelectedUserIds, selectedUserEmails } =
-        useSelectedUsers(); // 이메일 정보를 가져옵니다
-    const { mutate } = useDeleteUserList(); // 수정된 훅 사용
+        useSelectedUsers();
+    const { mutate } = useDeleteUserList();
     const [isEmailModalOpen, setIsEmailModalOpen] = useState(false);
     const openEmailModal = () => setIsEmailModalOpen(true);
     const closeEmailModal = () => setIsEmailModalOpen(false);
@@ -17,26 +17,16 @@ const TableBottom: React.FC = () => {
             selectedUserIds.length > 0 &&
             window.confirm('선택한 사용자를 삭제하시겠습니까?')
         ) {
-            // 각 사용자 ID에 대해 삭제 요청을 수행
-            selectedUserIds.forEach(userId => {
-                mutate(userId, {
-                    onSuccess: () => {
-                        // 삭제 성공 시, 선택된 사용자 목록에서 해당 사용자 ID 제거
-                        setSelectedUserIds(prevIds =>
-                            prevIds.filter(id => id !== userId),
-                        );
-                    },
-                    onError: error => {
-                        // 에러 처리
-                        console.error('삭제 중 오류 발생:', error);
-                    },
-                });
+            mutate(selectedUserIds, {
+                onSuccess: () => {
+                    setSelectedUserIds([]);
+                },
             });
         }
     };
 
     const handleSendEmail = () => {
-        console.log('Sending emails to:', selectedUserEmails); // 이메일 보내기 로직을 추가할 수 있습니다.
+        console.log('Sending emails to:', selectedUserEmails);
         openEmailModal();
     };
 

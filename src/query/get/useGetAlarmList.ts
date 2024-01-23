@@ -13,7 +13,7 @@ export interface IAlarmList {
 interface IRecruits {
     name: string;
     email: string;
-    phone: string;
+    phone: number;
     generation: number;
 }
 

@@ -6,7 +6,7 @@ import AdminBoardPage from './routes/AdminBoardPage';
 import AdminPage from './routes/AdminPage';
 import RecruitAlarm from './components/admin/RecruitAlarm';
 import User from './components/admin/User';
-import Admin from './components/admin/Admin';
+// import Admin from './components/admin/Admin';
 // import Superuser from './components/admin/Superuser';
 
 const router = createBrowserRouter([
@@ -32,7 +32,7 @@ const router = createBrowserRouter([
                     },
                 ],
             },
-            {
+            /*             {
                 path: '/adminboard',
                 element: <AdminBoardPage />,
                 children: [
@@ -41,7 +41,7 @@ const router = createBrowserRouter([
                         element: <Admin />,
                     },
                 ],
-            },
+            }, */
         ],
     },
 ]);

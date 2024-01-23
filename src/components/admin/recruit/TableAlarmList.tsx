@@ -11,7 +11,7 @@ function TableAlarmList() {
 
     const { generation } = useParams();
     const { data } = useGetAlarmList({
-        generation: Number(generation),
+        generation: 12,
     });
 
     return (

@@ -4,10 +4,13 @@ import request from '../../utils/request';
 function useDeleteUser() {
     const queryClient = useQueryClient();
 
-    const deleteUser = async (userId: number) => {
-        await request<null, null, null>({
-            uri: `/api/admin/v1/univAdmin/users`,
+    const deleteUser = async (userIds: number[]) => {
+        await request({
+            uri: '/api/admin/v1/univAdmin/users',
             method: 'DELETE',
+            data: {
+                ids: userIds,
+            },
         });
     };
 

@@ -7,7 +7,7 @@ const orderOptions = [
     { value: 1, label: '전체' },
     { value: 2, label: '대표' },
     { value: 3, label: '운영진' },
-    { value: 3, label: '아기사자' },
+    { value: 4, label: '아기사자' },
 ];
 
 //나중에 api 연결할 때 수정
