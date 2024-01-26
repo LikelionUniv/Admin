@@ -13,21 +13,21 @@ interface usePatchProjectUpdateProps {
 }
 
 function usePatchProjectUpdate({ projectId }: usePatchProjectUpdateProps) {
-    const queryClient = useQueryClient();
+    /* const queryClient = useQueryClient();
     const navigate = useNavigate();
-    // const { clearUser } = useEnrolledUser();
+     const { clearUser } = useEnrolledUser();
 
-    /* const updateProject = async (project: ProjectRegisterType) => {
+     const updateProject = async (project: ProjectRegisterType) => {
         const response = await request<ProjectRegisterType, PostId, null>({
             uri: `/api/v1/project/${projectId}`,
             method: 'patch',
             data: project,
-        }); */
+        }); 
 
-    //     return response.data.id;
+         return response.data.id;
 }
 
-/* const { mutate, data } = useMutation({
+ const { mutate, data } = useMutation({
         mutationKey: ['project-update'],
         mutationFn: updateProject,
         onSuccess: data => {
@@ -42,12 +42,12 @@ function usePatchProjectUpdate({ projectId }: usePatchProjectUpdateProps) {
             clearUser();
             navigate('/project');
         },
-    }); */
+    });  */
 
-/* return {
-        mutate,
-        response: data,
+    return {
+        // mutate,
+        // response: data,
     };
-} */
+}
 
 export default usePatchProjectUpdate;

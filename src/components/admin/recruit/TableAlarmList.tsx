@@ -16,12 +16,14 @@ function TableAlarmList() {
 
     return (
         <Wrapper>
-            <TableBody>
-                <Table className="check">
-                    <input type="checkbox" />
-                </Table>
-                <Table className="name">{data.universityName}</Table>
-            </TableBody>
+            {data.recruits.map(recruit => (
+                <TableBody key={recruit.name}>
+                    <Table className="check">
+                        <input type="checkbox" />
+                    </Table>
+                    <Table className="name">{recruit.email}</Table>
+                </TableBody>
+            ))}
         </Wrapper>
     );
 }

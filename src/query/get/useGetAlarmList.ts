@@ -24,7 +24,7 @@ interface AlarmListParam {
 function useGetAlarmList({ generation }: UseGetAlarmsProps) {
     const fetchAlarmsList = async () => {
         const response = await request<null, IAlarmList, AlarmListParam>({
-            uri: `/api/admin/v1/alarm/recruit?generation=${generation}`,
+            uri: `/api/admin/v1/alarm/recruit`,
             method: 'get',
             params: {
                 generation,

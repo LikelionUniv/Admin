@@ -41,11 +41,11 @@ function useSendEmail(): UseMutationResult<
         mutationFn: sendEmail,
         onSuccess: (data: EmailResponse) => {
             console.log('Email sent successfully:', data);
-            // 추가적인 성공 로직
+            // 성공 시 추가 로직 (예: 쿼리 데이터 무효화)
         },
         onError: (error: Error) => {
             console.error('Error sending email:', error);
-            // 추가적인 오류 로직
+            // 오류 시 추가 로직
         },
     });
 }
