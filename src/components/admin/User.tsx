@@ -1,22 +1,22 @@
 import React, { Suspense, useEffect, useState } from 'react';
 import styled from 'styled-components';
-import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
-// import OrderDropDown from './AdminOrderDropDown';
 import UserList from './user/UserList';
 import OrderDropDown from './user/OrderDropDown';
 import SearchBar from './Search/SearchBar';
+import { useUserProfile } from '../../api/mypage/useUserProfile';
 
 function User() {
     const [users, setUsers] = useState<string | undefined>();
     const [order, setOrder] = useState<string | undefined>();
     const [searchQuery, setSearchQuery] = useState<string | undefined>();
+    const userProfile = useUserProfile();
+    const universityName = userProfile.universityName;
 
     return (
         <Wrapper>
             <div className="TitleUniversity">
                 <Title>회원정보</Title>
-                <UniversityName>홍익대학교</UniversityName>
+                <UniversityName>{universityName}</UniversityName>
             </div>
             <Nav>
                 <OrderDropDown />
@@ -30,63 +30,6 @@ function User() {
 }
 
 export default User;
-
-/* interface User {
-    id: number;
-    name: string;
-    email: string;
-    major: string;
-    part: string;
-    ordinal: number;
-    role: string;
-} */
-
-/* const UserList = () => {
-    const [users, setUsers] = useState<User[]>([]);
-
-    useEffect(() => {
-        const fetchUsers = async () => {
-            try {
-                const response = await axios.get<User[]>(
-                    '/api/admin/v1/univAdmin/univ/users',
-                );
-                setUsers(response.data);
-            } catch (error) {
-                console.error('Error:', error);
-            }
-        };
-
-        fetchUsers();
-    }, []);
-
-    return (
-        <div>
-            {users.map(user => (
-                <div key={user.id}>
-                    <h2>{user.name}</h2>
-                    <p>{user.email}</p>
-                </div>
-            ))}
-        </div>
-    );
-};
-
-const User: React.FC = () => {
-    const navigate = useNavigate();
-
-    return (
-        <Wrapper>
-            <div className="TitleUniversity">
-                <Title>회원정보</Title>
-                <UniversityName>홍익대학교</UniversityName>
-            </div>
-
-            <div style={{ display: 'flex' }}>
-                <UserList />
-            </div>
-        </Wrapper>
-    );
-}; */
 
 const Wrapper = styled.div`
     width: 74.5%;
@@ -119,18 +62,4 @@ const UniversityName = styled.div`
     padding: 6px 12px 6px 12px;
     margin: 12px;
     background: #fff2e8;
-`;
-
-const SubTitle = styled.div`
-    color: var(--Grey-700, #868c94);
-    font-size: 18px;
-    font-weight: 500;
-`;
-
-const Divider = styled.div`
-    height: 3px;
-    background-color: var(--Grey-900, #212224);
-    width: 100%;
-    margin-top: 26px;
-    margin-bottom: 4px;
 `;

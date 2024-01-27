@@ -18,7 +18,7 @@ const EmailModal: React.FC<EmailModalProps & { selectedEmails: string[] }> = ({
     onCancel,
     selectedEmails,
 }) => {
-    const [sender] = useState('xxx@likelion.org');
+    const [sender] = useState('cu4149@likelion.org');
     const [recipient, setRecipient] = useState<string[]>([]);
     const [subject, setSubject] = useState('');
     const [content, setContent] = useState('');

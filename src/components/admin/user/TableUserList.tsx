@@ -119,35 +119,33 @@ function TableUserList({ users, id }: TableUserListProps) {
 export default TableUserList;
 
 const Wrapper = styled.div`
-    max-width: 100%;
     overflow-x: auto;
     overflow-y: hidden;
     align-items: center;
-    justify-content: start;
+
     max-height: 1660px;
 
     .name {
-        width: 13ch;
+        min-width: 110px;
     }
 
     .major {
-        width: 20ch;
+        min-width: 140px;
     }
 
     .ordinal {
-        width: 6ch;
+        min-width: 50px;
     }
 
     .part {
-        width: 15%;
-    }
-
-    .email {
-        width: 25%;
+        min-width: 120px;
     }
 
     .role {
-        width: 10%;
+        min-width: 60px;
+    }
+    .email {
+        min-width: 200px;
     }
 `;
 
@@ -184,12 +182,11 @@ const BodyTable = styled.div`
 const TableBody = styled.div`
     display: flex;
     border-bottom: 1px solid #dcdfe3;
-
-    text-align: left;
 `;
 
 const Table = styled.div`
     padding: 16px 4px;
     min-height: 24px;
     margin-right: 8px;
+    text-align: start;
 `;

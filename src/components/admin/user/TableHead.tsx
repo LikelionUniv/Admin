@@ -54,32 +54,33 @@ const HeadTable = styled.div`
     }
 
     .name {
-        width: 13%;
+        min-width: 120px;
     }
 
     .major {
-        width: 16%;
+        min-width: 145px;
     }
 
     .ordinal {
-        width: 9%;
+        min-width: 60px;
     }
 
     .part {
-        width: 13%;
+        min-width: 125px;
     }
 
     .role {
-        width: 9%;
+        min-width: 70px;
     }
     .email {
-        width: 25%;
+        min-width: 30px;
     }
 `;
 
 const Table = styled.div`
     padding: 16px 4px;
     height: 24px;
+    text-align: start;
 `;
 
 const Divider = styled.div`
