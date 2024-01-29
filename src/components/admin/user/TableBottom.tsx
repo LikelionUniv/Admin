@@ -3,14 +3,18 @@ import { useSelectedUsers } from './SelectedUserContext';
 import useDeleteUserList from '../../../query/delete/useDeleteUserList';
 import styled from 'styled-components';
 import EmailModal from './EmailModal';
+import { useUserProfile } from '../../../api/mypage/useUserProfile';
 
 const TableBottom: React.FC = () => {
     const { selectedUserIds, setSelectedUserIds, selectedUserEmails } =
         useSelectedUsers();
     const { mutate } = useDeleteUserList();
+    const userProfile = useUserProfile();
     const [isEmailModalOpen, setIsEmailModalOpen] = useState(false);
     const openEmailModal = () => setIsEmailModalOpen(true);
     const closeEmailModal = () => setIsEmailModalOpen(false);
+
+    const isAdmin = userProfile.role === 'UNIVERSITY_ADMIN';
 
     const handleDelete = () => {
         if (
@@ -35,9 +39,14 @@ const TableBottom: React.FC = () => {
             <SelectedActions>
                 <div>선택한 회원</div>
                 <Button onClick={handleDelete}>삭제하기</Button>
-                <Button style={{ color: '#4D5359' }} onClick={handleSendEmail}>
-                    이메일 보내기
-                </Button>
+                {!isAdmin && (
+                    <Button
+                        style={{ color: '#4D5359' }}
+                        onClick={handleSendEmail}
+                    >
+                        이메일 보내기
+                    </Button>
+                )}
             </SelectedActions>
             {isEmailModalOpen && (
                 <EmailModal

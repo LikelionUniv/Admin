@@ -4,6 +4,7 @@ import search from '../../img/admin/search.svg';
 import { useNavigate } from 'react-router';
 import arrowup from '../../img/admin/Chevron_Up.svg';
 import arrowdown from '../../img/admin/Chevron_Down.svg';
+import { useUserProfile } from '../../api/mypage/useUserProfile';
 
 interface SideBarProps {
     onItemSelect: (item: string) => void;
@@ -11,9 +12,12 @@ interface SideBarProps {
 }
 
 const SideBar: React.FC<SideBarProps> = ({ onItemSelect, onSearch }) => {
+    const userProfile = useUserProfile();
     const [selectedTab, setSelectedTab] = useState<string>('공지사항');
     const [inputValue, setInputValue] = useState<string>('');
     const [showSubList, setShowSubList] = useState(false);
+
+    const isAdmin = userProfile.role === 'UNIVERSITY_ADMIN';
 
     const navigate = useNavigate();
     const goAlarm = (): void => {
@@ -50,17 +54,19 @@ const SideBar: React.FC<SideBarProps> = ({ onItemSelect, onSearch }) => {
                 >
                     회원정보
                 </Tab>
-                <Tab
-                    className="ParentTab"
-                    $isSelected={selectedTab === '모집알림'}
-                    onClick={() => {
-                        onItemSelect('모집알림');
-                        setSelectedTab('모집알림');
-                        goAlarm();
-                    }}
-                >
-                    모집알림
-                </Tab>
+                {!isAdmin && (
+                    <Tab
+                        className="ParentTab"
+                        $isSelected={selectedTab === '모집알림'}
+                        onClick={() => {
+                            onItemSelect('모집알림');
+                            setSelectedTab('모집알림');
+                            goAlarm();
+                        }}
+                    >
+                        모집알림
+                    </Tab>
+                )}
 
                 {/* <div className="BoardBox">
                     <Tab

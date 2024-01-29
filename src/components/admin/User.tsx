@@ -12,16 +12,20 @@ function User() {
     const userProfile = useUserProfile();
     const universityName = userProfile.universityName;
 
+    const isAdmin = userProfile.role === 'UNIVERSITY_ADMIN';
+
     return (
         <Wrapper>
             <div className="TitleUniversity">
                 <Title>회원정보</Title>
                 <UniversityName>{universityName}</UniversityName>
             </div>
-            <Nav>
-                <OrderDropDown />
-                <SearchBar setSearchQuery={setSearchQuery} />
-            </Nav>
+            {!isAdmin && (
+                <Nav>
+                    <OrderDropDown />
+                    <SearchBar setSearchQuery={setSearchQuery} />
+                </Nav>
+            )}
             <Suspense fallback={<div>loading...</div>}>
                 <UserList order={order} searchQuery={searchQuery} />
             </Suspense>
