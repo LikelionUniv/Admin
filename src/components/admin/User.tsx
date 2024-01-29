@@ -1,60 +1,35 @@
-import React, { useEffect, useState } from 'react';
+import React, { Suspense, useEffect, useState } from 'react';
 import styled from 'styled-components';
-import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+import UserList from './user/UserList';
+import OrderDropDown from './user/OrderDropDown';
+import SearchBar from './Search/SearchBar';
+import { useUserProfile } from '../../api/mypage/useUserProfile';
 
-interface User {
-    id: number;
-    name: string;
-    email: string;
-}
-
-const UserList = () => {
-    const [users, setUsers] = useState<User[]>([]);
-
-    useEffect(() => {
-        const fetchUsers = async () => {
-            try {
-                const response = await axios.get<User[]>(
-                    '/api/v1/univAdmin/users',
-                );
-                setUsers(response.data);
-            } catch (error) {
-                console.error('Error:', error);
-            }
-        };
-
-        fetchUsers();
-    }, []);
-
-    return (
-        <div>
-            {users.map(user => (
-                <div key={user.id}>
-                    <h2>{user.name}</h2>
-                    <p>{user.email}</p>
-                </div>
-            ))}
-        </div>
-    );
-};
-
-const User: React.FC = () => {
-    const navigate = useNavigate();
+function User() {
+    const [users, setUsers] = useState<string | undefined>();
+    const [order, setOrder] = useState<string | undefined>();
+    const [searchQuery, setSearchQuery] = useState<string | undefined>();
+    const userProfile = useUserProfile();
+    const universityName = userProfile.universityName;
 
     return (
         <Wrapper>
             <div className="TitleUniversity">
                 <Title>회원정보</Title>
-                <UniversityName>홍익대학교</UniversityName>
+                <UniversityName>{universityName}</UniversityName>
             </div>
-
-            <div style={{ display: 'flex' }}>
-                <UserList />
-            </div>
+            <Nav>
+                <OrderDropDown />
+                <SearchBar setSearchQuery={setSearchQuery} />
+            </Nav>
+            <Suspense fallback={<div>loading...</div>}>
+                <UserList order={order} searchQuery={searchQuery} />
+            </Suspense>
         </Wrapper>
     );
-};
+}
+
+export default User;
 
 const Wrapper = styled.div`
     width: 74.5%;
@@ -63,6 +38,12 @@ const Wrapper = styled.div`
         display: flex;
         align-items: baseline;
     }
+`;
+
+const Nav = styled.div`
+    display: flex;
+    align-items: center;
+    margin: 10px 0 10px 0;
 `;
 
 const Title = styled.div`
@@ -82,19 +63,3 @@ const UniversityName = styled.div`
     margin: 12px;
     background: #fff2e8;
 `;
-
-const SubTitle = styled.div`
-    color: var(--Grey-700, #868c94);
-    font-size: 18px;
-    font-weight: 500;
-`;
-
-const Divider = styled.div`
-    height: 3px;
-    background-color: var(--Grey-900, #212224);
-    width: 100%;
-    margin-top: 26px;
-    margin-bottom: 4px;
-`;
-
-export { User, UserList };

@@ -4,10 +4,11 @@ import Root from './routes/root';
 
 import AdminBoardPage from './routes/AdminBoardPage';
 import AdminPage from './routes/AdminPage';
-import RecruitAlert from './components/admin/RecruitAlert';
-import { User } from './components/admin/User';
-import Admin from './components/admin/Admin';
-import Superuser from './components/admin/Superuser';
+import RecruitAlarm from './components/admin/RecruitAlarm';
+import User from './components/admin/User';
+import LoginPage from './routes/LoginPage';
+// import Admin from './components/admin/Admin';
+// import Superuser from './components/admin/Superuser';
 
 const router = createBrowserRouter([
     {
@@ -22,17 +23,22 @@ const router = createBrowserRouter([
                         path: '',
                         element: <User />,
                     },
+                    // {
+                    //     path: 'superuser',
+                    //     element: <Superuser />,
+                    // },
                     {
-                        path: 'superuser',
-                        element: <Superuser />,
-                    },
-                    {
-                        path: 'recruitalert',
-                        element: <RecruitAlert />,
+                        path: 'recruitalarm',
+                        element: <RecruitAlarm />,
                     },
                 ],
             },
+
             {
+                path: '/login',
+                element: <LoginPage />,
+            },
+            /*             {
                 path: '/adminboard',
                 element: <AdminBoardPage />,
                 children: [
@@ -41,7 +47,7 @@ const router = createBrowserRouter([
                         element: <Admin />,
                     },
                 ],
-            },
+            }, */
         ],
     },
 ]);

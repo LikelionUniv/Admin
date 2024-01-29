@@ -16,8 +16,8 @@ const SideBar: React.FC<SideBarProps> = ({ onItemSelect, onSearch }) => {
     const [showSubList, setShowSubList] = useState(false);
 
     const navigate = useNavigate();
-    const goAlert = (): void => {
-        navigate('/recruitalert');
+    const goAlarm = (): void => {
+        navigate('/recruitalarm');
     };
     const goUser = (): void => {
         navigate('/');
@@ -56,7 +56,7 @@ const SideBar: React.FC<SideBarProps> = ({ onItemSelect, onSearch }) => {
                     onClick={() => {
                         onItemSelect('모집알림');
                         setSelectedTab('모집알림');
-                        goAlert();
+                        goAlarm();
                     }}
                 >
                     모집알림
