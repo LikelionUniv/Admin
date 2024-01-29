@@ -6,6 +6,7 @@ import AdminBoardPage from './routes/AdminBoardPage';
 import AdminPage from './routes/AdminPage';
 import RecruitAlarm from './components/admin/RecruitAlarm';
 import User from './components/admin/User';
+import LoginPage from './routes/LoginPage';
 // import Admin from './components/admin/Admin';
 // import Superuser from './components/admin/Superuser';
 
@@ -31,6 +32,11 @@ const router = createBrowserRouter([
                         element: <RecruitAlarm />,
                     },
                 ],
+            },
+
+            {
+                path: '/login',
+                element: <LoginPage />,
             },
             /*             {
                 path: '/adminboard',

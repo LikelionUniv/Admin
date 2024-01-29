@@ -2,10 +2,7 @@ import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import EditModal from './ModifyUser';
 import { User } from './UserList';
-import useDeleteUsers from '../../../query/delete/useDeleteUser';
-import usePatchUser from '../../../query/patch/usePatchUser';
 import { useSelectedUsers } from './SelectedUserContext';
-import useDeleteUser from '../../../query/delete/useDeleteUser';
 import DeleteUser from './DeleteUser';
 import EmailModal from './EmailModal';
 import ModifyUser from './ModifyUser';
@@ -56,6 +53,14 @@ function TableUserList({ users, id }: TableUserListProps) {
         setEditingUser(user);
     };
 
+    const USER_ROLE: { [key: string]: string } = {
+        GUEST: '게스트',
+        USER: '아기사자',
+        MANAGER: '운영진',
+        UNIVERSITY_ADMIN: '대표',
+        SUPER_ADMIN: '관리자',
+    };
+
     useEffect(() => {
         if (selectAll) {
             const allUserIds = users.map(user => user.id);
@@ -88,7 +93,9 @@ function TableUserList({ users, id }: TableUserListProps) {
                             <Table className="major">{user.major}</Table>
                             <Table className="ordinal">{user.ordinal}기</Table>
                             <Table className="part">{user.part}</Table>
-                            <Table className="role">{user.role}</Table>
+                            <Table className="role">
+                                {USER_ROLE[user.role] || user.role}
+                            </Table>
                             <Table className="email">{user.email}</Table>
                             <Table className="edit">
                                 <button onClick={() => handleEdit(user)}>
@@ -142,7 +149,7 @@ const Wrapper = styled.div`
     }
 
     .role {
-        min-width: 60px;
+        min-width: 100px;
     }
     .email {
         min-width: 200px;

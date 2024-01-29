@@ -26,7 +26,7 @@ const AdminPage = () => {
 export default AdminPage;
 
 const Container = styled.div`
-    max-width: 1300px;
+    max-width: 1400px;
     padding: 0 40px;
     min-width: 1300px;
     width: 100%;

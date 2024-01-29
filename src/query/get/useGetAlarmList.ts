@@ -10,11 +10,12 @@ export interface IAlarmList {
     recruits: IRecruits[];
 }
 
-interface IRecruits {
+export interface IRecruits {
     name: string;
     email: string;
-    phone: number;
+    phoneNumber: number;
     generation: number;
+    createdAt: number;
 }
 
 interface AlarmListParam {

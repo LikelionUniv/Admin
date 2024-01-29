@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import useGetRecruitList from '../../../query/get/useGetAlarmList';
 import { useSelectedUsers } from './SelectedUserContext';
 import { useParams } from 'react-router-dom';
 import useGetAlarmList from '../../../query/get/useGetAlarmList';
@@ -16,14 +15,12 @@ function TableAlarmList() {
 
     return (
         <Wrapper>
-            {data.recruits.map(recruit => (
-                <TableBody key={recruit.name}>
-                    <Table className="check">
-                        <input type="checkbox" />
-                    </Table>
-                    <Table className="name">{recruit.email}</Table>
-                </TableBody>
-            ))}
+            <TableBody>
+                <Table className="check">
+                    <input type="checkbox" />
+                </Table>
+                <Table className="name"></Table>
+            </TableBody>
         </Wrapper>
     );
 }
@@ -76,34 +73,6 @@ const Wrapper = styled.div`
         height: 24px;
     }
 `;
-const HeadTable = styled.div`
-    text-align: left;
-    display: flex;
-
-    font-weight: 700;
-`;
-const BodyTable = styled.div`
-    button {
-        width: 57px;
-        height: 32px;
-        padding: 5.5px, 16px, 5.5px, 16px;
-        border-radius: 6px;
-
-        padding: 4px 8px;
-        background: #eaecee;
-
-        font-weight: 700;
-        color: #212224;
-
-        border: none;
-        cursor: pointer;
-
-        &:hover {
-            background-color: #ff7710;
-            color: #ffffff;
-        }
-    }
-`;
 
 const TableBody = styled.div`
     display: flex;
@@ -112,6 +81,7 @@ const TableBody = styled.div`
 
 const Table = styled.div`
     padding: 16px 4px;
+    margin-bottom: 15px;
 `;
 
 const Divider = styled.div`

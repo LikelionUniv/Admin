@@ -70,7 +70,7 @@ const HeadTable = styled.div`
     }
 
     .role {
-        min-width: 70px;
+        min-width: 110px;
     }
     .email {
         min-width: 30px;
